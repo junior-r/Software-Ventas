@@ -19,7 +19,7 @@ class Producto(models.Model):
     precio_compra = models.DecimalField(max_digits=5, decimal_places=2)
     precio_venta = models.DecimalField(max_digits=5, decimal_places=2)
     cantidad = models.IntegerField()
-    marca = models.ForeignKey(Marca, on_delete=models.PROTECT)
+    marca = models.ForeignKey(Marca,  null=True, blank=True, on_delete=models.SET_NULL)
     username = models.CharField(max_length=100)
 
     def get_username(self):

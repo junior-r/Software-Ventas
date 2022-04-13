@@ -169,29 +169,30 @@
                         <td>{{ p.marca | title }}</td>
                         <td>{{ p.username }}</td>
                         <td class="product_options">
-                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
-                                <a href="{% url 'incrementar_prd' p.id %}" class="text-decoration-none text-info">
+
+                            <a href="{% url 'incrementar_prd' p.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
                                     <span class="icon-plus"></span>
-                                </a>
-                            </button>
+                                </button>
+                            </a>
 
-                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
-                                <a href="{% url 'decrementar_prd' p.id %}" class="text-decoration-none text-info">
+                            <a href="{% url 'decrementar_prd' p.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
                                     <span class="icon-minus"></span>
-                                </a>
-                            </button>
+                                </button>
+                            </a>
 
-                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
-                                <a href="#" class="text-decoration-none text-info">
+                            <a href="#" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
                                     <span class="icon-pencil"></span>
-                                </a>
-                            </button>
+                                </button>
+                            </a>
 
-                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
-                                <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none text-danger">
+                            <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
                                     <span class="icon-bin"></span>
-                                </a>
-                            </button>
+                                </button>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
