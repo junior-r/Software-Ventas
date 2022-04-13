@@ -137,7 +137,8 @@ def proveedores(request):
 
     data = {
         'proveedores': marcas,
-        'form': AddMarcaForm()
+        'form': AddMarcaForm(),
+        'date': date
     }
 
     if request.method == 'POST':
