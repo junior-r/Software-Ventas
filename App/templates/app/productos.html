@@ -1,0 +1,277 @@
+{% extends 'app/home.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+<title>Productos</title>
+{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/productos.css' %}">
+{% endblock %}
+
+<div class="content">
+{% block content %}
+    <div class="content_header d-flex justify-content-between align-items-center mb-5">
+        <p>Recuerda que solo se puede buscar por <strong>Id</strong>, <strong>Nombre</strong>, <strong>Marca</strong> y <strong>Usuario</strong>.</p>
+        <form action="" class="d-flex" method="get">
+            <input class="form-control me-2 fw-bold" type="search" placeholder="Buscar productos..."
+                   aria-label="Search" name="search" value="{{ request.GET.search }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    {% if result_prd %}
+        <h3>Resultados de la búsqueda para <span class="text-primary">{{ request.GET.search }}</span></h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                  <th scope="col">#id</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">P. Compra</th>
+                  <th scope="col">P. Venta</th>
+                  <th scope="col">Ganancia</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Ganancia Total</th>
+                  <th scope="col">Marca</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in result_prd %}
+                    <tr>
+                        <th scope="row">{{ p.id }}</th>
+                        <td>{{ p.nombre }}</td>
+                        <td>{{ p.descripcion }}</td>
+                        <td>$ {{ p.precio_compra | intcomma }}</td>
+                        <td>$ {{ p.precio_venta | intcomma }}</td>
+                        <td>$ {{ p.get_utilities_prd | intcomma }}</td>
+                        <td>{{ p.cantidad | intcomma }}</td>
+                        <td>$ {{ p.get_utilities_total | intcomma }}</td>
+                        <td>{{ p.marca | title }}</td>
+                        <td>{{ p.username }}</td><td class="product_options">
+                            <button type="button" class="btn p-0">
+                                <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none text-danger">
+                                    <span class="icon-bin"></span>
+                                </a>
+                            </button>
+                            <button type="button" class="btn p-0">
+                                <a href="#" class="text-decoration-none text-info">
+                                    <span class="icon-pencil"></span>
+                                </a>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>$ {{ ganancias | intcomma }}</td>
+                    <td>{{ totalproductos | intcomma }}</td>
+                    <td>$ {{ ganancia_total | intcomma }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+            <a href="{% url 'productos' %}">
+                <button class="btn btn-info">Limpiar</button>
+            </a>
+        </table>
+    {% else %}
+        {% if request.GET.search not in result_prd %}
+            <h3>No hay coincidencias, intenta de nuevo!</h3>
+            <p>Tú buscaste con la palabra: <span class="text-primary fs-4">{{ request.GET.search }}</span></p>
+            <a href="{% url 'productos' %}">
+                <button class="btn btn-info">Limpiar</button>
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <!-- Contenedor de las Tarjetas de información -->
+    <div class="container-cards d-flex gap-5">
+        <section class="card card-products">
+            <div class="content d-flex flex-column align-items-center justify-content-center">
+                <p class="cantidad m-0">
+                    {% if user.username == username %}
+                    {{ productos.count | intcomma }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+                <small>Productos diferentes</small>
+            </div>
+        </section>
+
+        <section class="card card-total-products">
+            <div class="content d-flex flex-column align-items-center justify-content-center">
+                <p class="cantidad m-0">
+                    {% if user.username == username %}
+                    {{ totalproductos | intcomma }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+                <small>Productos en Stock</small>
+            </div>
+        </section>
+
+        <section class="card card-utilities">
+            <div class="content d-flex flex-column align-items-center justify-content-center">
+                <p class="cantidad m-0">
+                    {% if user.username == username %}
+                    $ {{ ganancia_total | intcomma }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+                <small>En total de ganancias</small>
+            </div>
+        </section>
+    </div>
+
+    {% if productos %}
+        {% if user.username == username %}
+            <h1 class="mb-3">Productos</h1>
+            <table class="table table-hover">
+            <thead>
+                <tr>
+                  <th scope="col">#id</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">P. Compra</th>
+                  <th scope="col">P. Venta</th>
+                  <th scope="col">Ganancia</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Ganancia Total</th>
+                  <th scope="col">Marca</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                    <tr>
+                        <th scope="row">{{ p.id }}</th>
+                        <td>{{ p.nombre }}</td>
+                        <td class="rows-text-1">{{ p.descripcion }}</td>
+                        <td>$ {{ p.precio_compra | intcomma }}</td>
+                        <td>$ {{ p.precio_venta | intcomma }}</td>
+                        <td>$ {{ p.get_utilities_prd | intcomma }}</td>
+                        <td>{{ p.cantidad | intcomma }}</td>
+                        <td>$ {{ p.get_utilities_total | intcomma }}</td>
+                        <td>{{ p.marca | title }}</td>
+                        <td>{{ p.username }}</td>
+                        <td class="product_options">
+                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
+                                <a href="{% url 'incrementar_prd' p.id %}" class="text-decoration-none text-info">
+                                    <span class="icon-plus"></span>
+                                </a>
+                            </button>
+
+                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
+                                <a href="{% url 'decrementar_prd' p.id %}" class="text-decoration-none text-info">
+                                    <span class="icon-minus"></span>
+                                </a>
+                            </button>
+
+                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
+                                <a href="#" class="text-decoration-none text-info">
+                                    <span class="icon-pencil"></span>
+                                </a>
+                            </button>
+
+                            <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
+                                <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none text-danger">
+                                    <span class="icon-bin"></span>
+                                </a>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>$ {{ ganancias | intcomma }}</td>
+                    <td>{{ totalproductos | intcomma }}</td>
+                    <td>$ {{ ganancia_total | intcomma }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        {% endif %}
+    {% else %}
+        <h1>No tienes productos {{ user.username }}</h1>
+        <p>Da click en el botón de <strong>+</strong> para agregar uno.</p>
+    {% endif %}
+
+    <button type="button" class="add_prd_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-placement="bottom" title="Agregar un Producto">
+      <span class="icon-plus"></span>
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'productos' %}" method="post" class="d-flex flex-column gap-4">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <div class="buttons d-flex flex-row gap-2 justify-content-between">
+                            <button type="reset" class="btn btn-secondary">Limpiar</button>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </div>
+                        <hr class="mb-0">
+                        <a href="{% url 'productos' %}">
+                            <button type="button" class="btn btn-danger">Cancelar</button>
+                        </a>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+</div>
+
+{% block js %}
+    <script>
+        function delete_product(id) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta acción es irreversible.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/delete_product/'+id+'/'
+                }
+            })
+        }
+    </script>
+{% endblock %}

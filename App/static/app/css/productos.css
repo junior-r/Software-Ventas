@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.container-cards {
+    margin: 5rem 0;
+    font-size: 4rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+}
+
+.container-cards .card {
+    border: none;
+    box-shadow: 2px 2px 15px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 1rem 3rem;
+}
+
+.container-cards .card .content {
+    transition: all 0.3s ease;
+}
+
+.container-cards .card:hover .content {
+    transform: scale(1.2);
+}
+
+.container-cards .card small {
+    font-size: 1rem;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0.1px 0.1px 5px #000;
+}
+
+.container-cards .card-products {
+    background-color: rgba(59, 220, 59, 0.82);
+}
+
+.container-cards .card-total-products {
+    background-color: rgba(255, 63, 63, 0.84);
+}
+
+.container-cards .card-utilities {
+    background-color: rgba(98, 98, 248, 0.84);
+}
+
+.product_options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.product_options button {
+    padding: 0 0.2rem !important;
+    outline: none;
+    transition: all .3s ease;
+}
+
+.product_options button:hover {
+    outline: 1px solid #000;
+}

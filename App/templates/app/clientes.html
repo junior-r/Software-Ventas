@@ -1,0 +1,210 @@
+{% extends 'app/home.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    <title>Clientes</title>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/productos.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/clientes.css' %}">
+    <link rel="stylesheet" href="{% static 'app/icons/style.css' %}">
+{% endblock %}
+
+{% block content %}
+        <div class="content">
+            <div class="content_header d-flex justify-content-between align-items-center mb-5">
+                <p>Recuerda que solo se puede buscar por <strong>Id</strong>, <strong>Nombre</strong>, <strong>Marca</strong> y <strong>Usuario</strong>.</p>
+                <form action="" class="d-flex" method="get">
+                    <input class="form-control me-2 fw-bold" type="search" placeholder="Buscar clientes..." aria-label="Search" name="search" value="{{ request.GET.search }}">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form>
+            </div>
+
+            {% if result_search %}
+                <h3>Resultados de busqueda para <span class="text-primary">{{ request.GET.search }}</span></h3>
+                <table class="table table-hover my-5">
+                    <thead>
+                        <tr>
+                          <th scope="col">#id</th>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Apellidos</th>
+                          <th scope="col">Cedula</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Telefono</th>
+                          <th scope="col">Sexo</th>
+                          <th scope="col">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in result_search %}
+                            <tr>
+                                <th scope="row">{{ d.id }}</th>
+                                <td>{{ d.nombres }}</td>
+                                <td>{{ d.apellidos }}</td>
+                                <td>{{ d.cedula | intcomma }}</td>
+                                <td>{{ d.email }}</td>
+                                <td>{{ d.telefono }}</td>
+                                <td>{{ d.sexo }}</td>
+                                <td class="client_options">
+                                    <button type="button" class="btn p-0">
+                                        <a href="#" onclick="delete_client({{ d.id }})" class="text-decoration-none text-danger">
+                                            <span class="icon-bin"></span>
+                                        </a>
+                                    </button>
+                                    <button type="button" class="btn p-0">
+                                        <a href="#" class="text-decoration-none text-info">
+                                            <span class="icon-pencil"></span>
+                                        </a>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                    <a href="{% url 'clientes' %}">
+                        <button class="btn btn-info">Limpiar</button>
+                    </a>
+                </table>
+            {% else %}
+                {% if request.GET.search not in result_search %}
+                    <h3>No hay coincidencias, intenta de nuevo!</h3>
+                    <p>Tú buscaste con la palabra: <span class="text-primary fs-4">{{ request.GET.search }}</span></p>
+                    <a href="{% url 'clientes' %}">
+                        <button class="btn btn-info mb-5">Limpiar</button>
+                    </a>
+                {% endif %}
+            {% endif %}
+
+            {% if clientes %}
+                <h1>Clientes de {{ user.username }}</h1>
+                <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th scope="col">#id</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Apellidos</th>
+                      <th scope="col">Cedula</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Telefono</th>
+                      <th scope="col">Sexo</th>
+                      <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clientes %}
+                        <tr>
+                            <th scope="row">{{ client.id }}</th>
+                            <td>{{ client.nombres }}</td>
+                            <td>{{ client.apellidos }}</td>
+                            <td>{{ client.cedula | intcomma }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.telefono }}</td>
+                            <td>{{ client.sexo }}</td>
+                            <td class="client_options">
+                                <button type="button" class="btn p-0">
+                                    <a href="#" onclick="delete_client({{ client.id }})" class="text-decoration-none text-danger">
+                                        <span class="icon-bin"></span>
+                                    </a>
+                                </button>
+                                <button type="button" class="btn p-0">
+                                    <a href="#" class="text-decoration-none text-info">
+                                        <span class="icon-pencil"></span>
+                                    </a>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        {% else %}
+            <h3>No tienes productos {{ user.username }}</h3>
+            <p>Da click en el botón de <strong>+</strong> para agregar uno.</p>
+        {% endif %}
+
+        <!-- Button trigger modal -->
+        <button type="button" class="add_client_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-placement="bottom" title="Agregar un Cliente">
+            <span class="icon-plus"></span>
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">Agregar Cliente</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <form action="" method="post" class="d-flex flex-column gap-4">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <div class="buttons d-flex flex-row gap-2 justify-content-between">
+                            <a href="{% url 'clientes' %}">
+                                <button type="button" class="btn btn-danger">Cancelar</button>
+                            </a>
+                            <div class="accounts">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                        <hr class="mb-0">
+                        <button type="reset" class="btn btn-secondary">Limpiar</button>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_client(id) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta acción es irreversible.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = 'delete_client/'+id+'/'
+                }
+            })
+        }
+    </script>
+{% endblock %}

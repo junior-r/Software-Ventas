@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Clases para recortar lineas de texto */
+[class*="rows-text"] {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--rows);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+    border: none;
+}
+
+.rows-text-1 {
+  --rows: 1;
+}
+
+.rows-text-2 {
+  --rows: 2;
+}
+
+.rows-text-3 {
+  --rows: 3;
+}
+
+
+
+.card {
+    box-shadow: none;
+    transition: all 0.3s ease-in;
+}
+
+.card:hover {
+    box-shadow: 2px 2px 15px 2px rgba(0, 0, 0, 0.15);
+}
+
+
+.card-img-top {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.card-title, .title {
+    font-family: 'Open Sans', sans-serif
+}
+
+.card-title {
+    font-size: 2rem;
+}
+
+.card-body p {
+    font-family: 'Roboto', sans-serif;
+}
+
+.add_user_btn,
+.add_prd_btn,
+.add_client_btn {
+    border-radius: 50% !important;
+    padding: 0.5rem 0.75rem !important;
+    position: fixed;
+    bottom: 5rem;
+    right: 2rem;
+}
+
+.footer {
+    box-shadow: 0 -1px 15px 1px rgba(0, 0, 0, 0.5);
+    padding: 1rem 0;
+}
+
+.footer .content-footer {
+    display: grid;
+    justify-content: space-between;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    padding-inline: 1rem;
+}
+
+.footer .content-footer section {
+    text-align: center;
+}
+
+.footer .content-footer .date p .year {
+    font-family: 'Nunito', sans-serif;
+}
+
+.footer .content-footer section p {
+    margin: 0;
+}

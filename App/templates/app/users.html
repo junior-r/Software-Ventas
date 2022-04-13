@@ -1,0 +1,98 @@
+{% extends 'app/home.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'app/icons/style.css' %}">
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/users.css' %}">
+{% endblock %}
+{% block title %}
+    <title>Usuarios</title>
+{% endblock %}
+{% block content %}
+    <div class="content">
+        {% if user.is_superuser %}
+            <h1>Usuarios que usan tu plataforma {{ user.username }}</h1>
+
+            {% if all_users %}
+            <div class="content-cards d-flex gap-3 my-5">
+                {% for u in all_users %}
+                    <div class="card" style="width: 18rem;">
+                      <img src="{% static 'app/images/anonymous_user.webp' %}" class="card-img-top" alt="Imagen del usuario">
+                      <div class="card-body">
+                        <h5 class="card-title fs-4">{{ u.first_name }} {{ u.last_name }}</h5>
+                        <p class="card-text">@ {{ u.username }}</p>
+                        <a href="mailto:{{ u.email }}" class="btn btn-primary">Enviar un Email</a>
+                      </div>
+                    <div class="card-footer">
+                        <div class="content-actions d-flex justify-content-evenly">
+                            {% if user.username == u.username %}
+                            {% else %}
+                                <button type="button" class="btn"><a href="#" onclick="delete_user({{ u.id }})" class="text-decoration-none text-danger"><span class="icon-bin"></span></a></button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+            <button class="add_user_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <span class="icon-plus"></span>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="" method="post" class="d-flex flex-column gap-4">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <div class="buttons d-flex flex-row gap-2 justify-content-between">
+                                    <button type="reset" class="btn btn-secondary">Limpiar</button>
+                                    <button type="submit" class="btn btn-primary">Agregar</button>
+                                </div>
+                                <hr class="mb-0">
+                                <a href="{% url 'users' %}">
+                                    <button type="button" class="btn btn-danger">Cancelar</button>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        {% else %}
+            <h1>No tienes permiso para estar aquí</h1>
+        {% endif %}
+{% endblock %}
+
+{% block js %}
+        <script>
+            function delete_user(id) {
+                Swal.fire({
+                    'title': '¿Estás Seguro?',
+                    'text': 'Esta acción es irreversible.',
+                    'icon': 'warning',
+                    'showCancelButton': true,
+                    'cancelButtonText': 'Cancelar',
+                    'confirmButtonText': 'Eliminar',
+                    'confirmButtonColor': '#dc3545'
+                })
+                .then(function(result) {
+                    if(result.isConfirmed) {
+                        window.location.href = '/delete_user/'+id+'/'
+                    }
+                })
+            }
+        </script>
+    {% endblock %}

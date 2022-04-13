@@ -1,0 +1,114 @@
+{% extends 'app/home.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <title>Proveedores</title>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/marcas.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Proveedores de {{ user.username }}</h1>
+
+    <div class="content_prov">
+        <div class="row gap-3 justify-content-between">
+            {% if proveedores %}
+                <div class="col-md-7">
+                        <table class="table">
+                            <thead>
+                                  <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Opciones</th>
+                                  </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in proveedores %}
+                                      <tr>
+                                            <th scope="row">{{ p.id }}</th>
+                                            <td>{{ p.nombre }}</td>
+                                            <td class="marcas_options">
+
+                                                <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Llamar a {{ p.telefono }}">
+                                                    <a href="tel:{{ p.telefono }}" class="text-decoration-none text-info">
+                                                        <span class="icon-phone"></span>
+                                                    </a>
+                                                </button>
+
+                                                <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enviar email a {{ p.email }}">
+                                                    <a href="mailto:{{ p.email }}" class="text-decoration-none text-info">
+                                                        <span class="icon-gmail"></span>
+                                                    </a>
+                                                </button>
+
+                                                <button type="button" class="btn p-0">
+                                                    <a href="#" class="text-decoration-none text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar a {{ p.nombre }}">
+                                                        <span class="icon-pencil"></span>
+                                                    </a>
+                                                </button>
+
+                                                <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar a {{ p.nombre }}">
+                                                    <a href="#" onclick="delete_prov({{ p.id }})" class="text-decoration-none text-danger">
+                                                        <span class="icon-bin"></span>
+                                                    </a>
+                                                </button>
+                                            </td>
+                                      </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+            {% else %}
+                <div class="col-md-7">
+                    <h4 class="mt-5">No hay Proveedores, agrega uno!</h4>
+                </div>
+            {% endif %}
+
+            <div class="col-6 col-md-4">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Agregar Proveedor</h5>
+                    <hr>
+                    <form action="{% url 'proveedores' %}" method="post" class="d-flex flex-column gap-4">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <div class="buttons d-flex flex-row gap-2 justify-content-between">
+                            <button type="reset" class="btn btn-secondary">Limpiar</button>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </div>
+                        <hr class="mb-0">
+                        <a href="{% url 'proveedores' %}">
+                            <button type="button" class="btn btn-danger">Cancelar</button>
+                        </a>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        function delete_prov(id) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta acción es irreversible.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/delete_proveedor/'+id+'/'
+                }
+            })
+        }
+    </script>
+{% endblock %}
