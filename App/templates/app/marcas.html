@@ -10,82 +10,169 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Proveedores de {{ user.username }}</h1>
+    <div class="content_header d-flex justify-content-between align-items-center mb-5">
+        <p>Recuerda que solo se puede buscar por <strong>Id</strong>, <strong>Nombre</strong> y <strong>Gmail</strong>.</p>
+        <form action="" class="d-flex" method="get">
+            <input class="form-control me-2 fw-bold" type="search" placeholder="Buscar proveedores..."
+                   aria-label="Search" name="search" value="{{ request.GET.search }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    {% if result_prov %}
+        <h3>Resultados de la búsqueda para <span class="text-primary">{{ request.GET.search }}</span></h3>
+
+        <table class="table">
+            <thead>
+                  <tr>
+                      <th scope="col">#Id</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Teléfono</th>
+                      <th scope="col">Opciones</th>
+                  </tr>
+            </thead>
+            <tbody>
+                {% for p in result_prov %}
+                      <tr>
+                            <th scope="row">{{ p.id }}</th>
+                            <td>{{ p.nombre }}</td>
+                            <td>{{ p.telefono }}</td>
+                            <td class="marcas_options">
+
+                                <a href="tel:{{ p.telefono }}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Llamar a {{ p.telefono }}">
+                                        <span class="icon-phone"></span>
+                                    </button>
+                                </a>
+
+                                <a href="mailto:{{ p.email }}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enviar email a {{ p.email }}">
+                                        <span class="icon-gmail"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'edit_proveedor' p.id %}" class="text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar a {{ p.nombre }}">
+                                    <button type="button" class="btn p-0 text-info">
+                                        <span class="icon-pencil"></span>
+                                    </button>
+                                </a>
+
+                                <a href="#" onclick="delete_prov({{ p.id }})" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar a {{ p.nombre }}">
+                                        <span class="icon-bin"></span>
+                                    </button>
+                                </a>
+
+                            </td>
+                      </tr>
+                {% endfor %}
+            </tbody>
+            <a href="{% url 'proveedores' %}">
+                <button class="btn btn-info">Limpiar</button>
+            </a>
+        </table>
+    {% else %}
+        {% if request.GET.search not in result_prov %}
+            <h3>No hay coincidencias, intenta de nuevo!</h3>
+            <p>Tú buscaste con la palabra: <span class="text-primary fs-4">{{ request.GET.search }}</span></p>
+            <a href="{% url 'proveedores' %}">
+                <button class="btn btn-info">Limpiar</button>
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <h1 class=" mt-5">Proveedores de {{ user.username }}</h1>
 
     <div class="content_prov">
-        <div class="row gap-3 justify-content-between">
-            {% if proveedores %}
-                <div class="col-md-7">
-                        <table class="table">
-                            <thead>
-                                  <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nombre</th>
-                                        <th scope="col">Opciones</th>
-                                  </tr>
-                            </thead>
-                            <tbody>
-                                {% for p in proveedores %}
-                                      <tr>
-                                            <th scope="row">{{ p.id }}</th>
-                                            <td>{{ p.nombre }}</td>
-                                            <td class="marcas_options">
+        {% if proveedores %}
+            <div class="">
+                <table class="table">
+                    <thead>
+                          <tr>
+                              <th scope="col">#Id</th>
+                              <th scope="col">Nombre</th>
+                              <th scope="col">Teléfono</th>
+                              <th scope="col">Opciones</th>
+                          </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in proveedores %}
+                              <tr>
+                                    <th scope="row">{{ p.id }}</th>
+                                    <td>{{ p.nombre }}</td>
+                                    <td>{{ p.telefono }}</td>
+                                    <td class="marcas_options">
 
-                                                <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Llamar a {{ p.telefono }}">
-                                                    <a href="tel:{{ p.telefono }}" class="text-decoration-none text-info">
-                                                        <span class="icon-phone"></span>
-                                                    </a>
-                                                </button>
+                                        <a href="tel:{{ p.telefono }}" class="text-decoration-none">
+                                            <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Llamar a {{ p.telefono }}">
+                                                <span class="icon-phone"></span>
+                                            </button>
+                                        </a>
 
-                                                <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enviar email a {{ p.email }}">
-                                                    <a href="mailto:{{ p.email }}" class="text-decoration-none text-info">
-                                                        <span class="icon-gmail"></span>
-                                                    </a>
-                                                </button>
+                                        <a href="mailto:{{ p.email }}" class="text-decoration-none">
+                                            <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enviar email a {{ p.email }}">
+                                                <span class="icon-gmail"></span>
+                                            </button>
+                                        </a>
 
-                                                <button type="button" class="btn p-0">
-                                                    <a href="#" class="text-decoration-none text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar a {{ p.nombre }}">
-                                                        <span class="icon-pencil"></span>
-                                                    </a>
-                                                </button>
+                                        <a href="{% url 'edit_proveedor' p.id %}" class="text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar a {{ p.nombre }}">
+                                            <button type="button" class="btn p-0 text-info">
+                                                <span class="icon-pencil"></span>
+                                            </button>
+                                        </a>
 
-                                                <button type="button" class="btn p-0" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar a {{ p.nombre }}">
-                                                    <a href="#" onclick="delete_prov({{ p.id }})" class="text-decoration-none text-danger">
-                                                        <span class="icon-bin"></span>
-                                                    </a>
-                                                </button>
-                                            </td>
-                                      </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                </div>
-            {% else %}
-                <div class="col-md-7">
-                    <h4 class="mt-5">No hay Proveedores, agrega uno!</h4>
-                </div>
-            {% endif %}
+                                        <a href="#" onclick="delete_prov({{ p.id }})" class="text-decoration-none">
+                                            <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar a {{ p.nombre }}">
+                                                <span class="icon-bin"></span>
+                                            </button>
+                                        </a>
 
-            <div class="col-6 col-md-4">
-                <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Agregar Proveedor</h5>
-                    <hr>
-                    <form action="{% url 'proveedores' %}" method="post" class="d-flex flex-column gap-4">
-                        {% csrf_token %}
-                        {{ form | crispy }}
-                        <div class="buttons d-flex flex-row gap-2 justify-content-between">
-                            <button type="reset" class="btn btn-secondary">Limpiar</button>
-                            <button type="submit" class="btn btn-primary">Agregar</button>
-                        </div>
-                        <hr class="mb-0">
-                        <a href="{% url 'proveedores' %}">
-                            <button type="button" class="btn btn-danger">Cancelar</button>
-                        </a>
-                    </form>
-                </div>
+                                    </td>
+                              </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+        {% else %}
+            <div class="col-md-7">
+                <h4 class="mt-5">No hay Proveedores, agrega uno!</h4>
             </div>
+        {% endif %}
+
+        <button type="button" class="add_prov_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-placement="bottom" title="Agregar un Producto">
+            <span class="icon-plus"></span>
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                    <div class="modal-content">
+                          <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <form action="" method="post" class="d-flex flex-column gap-4">
+                                            {% csrf_token %}
+                                            {{ form | crispy }}
+                                            <div class="buttons d-flex flex-row gap-2 justify-content-between">
+                                                <button type="reset" class="btn btn-secondary">Limpiar</button>
+                                                <button type="submit" class="btn btn-primary">Agregar</button>
+                                            </div>
+                                            <hr class="mb-0">
+                                            <a href="{% url 'proveedores' %}">
+                                                <button type="button" class="btn btn-danger">Cancelar</button>
+                                            </a>
+                                        </form>
+                                    </div>
+                                </div>
+                          </div>
+                    </div>
+              </div>
+        </div>
+
         </div>
     </div>
 

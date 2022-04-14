@@ -98,6 +98,25 @@ def products(request):
 
 
 @login_required
+def edit_product(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    data = {
+        'form': AddProductForm(instance=producto)
+    }
+    if request.method == 'POST':
+        form = AddProductForm(request.POST, instance=producto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto actualizado con éxito!')
+            return redirect(to='productos')
+        else:
+            messages.error(request, 'Algún dato es inválido')
+            data['form'] = form
+
+    return render(request, 'app/edit_producto.html', data)
+
+
+@login_required
 def increment_cantidad_prd(request, id):
     # Incrementa la cantidad del producto de 1 en 1
     producto = Producto.objects.filter(id=id)
@@ -134,12 +153,24 @@ def delete_product(request, id):
 @login_required
 def proveedores(request):
     marcas = Marca.objects.all()
+    search = request.GET.get('search')
 
     data = {
         'proveedores': marcas,
         'form': AddMarcaForm(),
         'date': date
     }
+
+    if search:
+        try:
+            result_prov = Marca.objects.filter(
+                Q(id__icontains=search) |
+                Q(nombre__icontains=search) |
+                Q(email__icontains=search)
+            ).distinct()
+            data['result_prov'] = result_prov
+        except ValueError as ve:
+            messages.error(request, 'Solo se puede buscar por Id, Nombre y Gmail.')
 
     if request.method == 'POST':
         form = AddMarcaForm(request.POST)
@@ -155,7 +186,27 @@ def proveedores(request):
 
 
 @login_required
-def delete_marca(request, id):
+def edit_proveedor(request, id):
+    proveedor = get_object_or_404(Marca, id=id)
+
+    data = {
+        'form': AddMarcaForm(instance=proveedor)
+    }
+    if request.method == 'POST':
+        form = AddMarcaForm(request.POST, instance=proveedor)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Proveedor actualizado con éxito!')
+            return redirect(to='proveedores')
+        else:
+            messages.error(request, 'Algún dato es inválido')
+            data['form'] = form
+
+    return render(request, 'app/edit_proveedor.html', data)
+
+
+@login_required
+def delete_proveedor(request, id):
     prov = get_object_or_404(Marca, id=id)
     prov.delete()
     messages.success(request, 'Proveedor eliminado existosamente!')
