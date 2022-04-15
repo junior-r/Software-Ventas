@@ -1,0 +1,101 @@
+{% extends 'app/home.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %} <title>Producto {{ product.nombre }}</title> {% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/view_product.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Información del producto <span class="text-primary">{{ product.nombre }}</span></h1>
+    <hr>
+    <div class="content-prooduct mt-3">
+        <section class="product-id ps-3 border-4 border-start border-primary">
+            <h5 class="title fw-bold">Id</h5>
+            <p class="field number ps-3">{{ product.id }}</p>
+        </section>
+
+        <section class="product-nombre ps-3 border-4 border-start border-secondary">
+            <h5 class="title fw-bold">Nombre</h5>
+            <p class="field paragraph ps-3">{{ product.nombre }}</p>
+        </section>
+
+        <section class="product-description ps-3 border-4 border-start border-success">
+            <h5 class="title fw-bold">Descripción</h5>
+            <p class="field paragraph ps-3">{{ product.descripcion }}</p>
+        </section>
+
+        <section class="product-p_compra ps-3 border-4 border-start border-danger">
+            <h5 class="title fw-bold">Precio de Compra</h5>
+            <p class="field number ps-3">$ {{ product.precio_compra }}</p>
+        </section>
+
+        <section class="product-p_venta ps-3 border-4 border-start border-warning">
+            <h5 class="title fw-bold">Precio de Venta</h5>
+            <p class="field number ps-3">$ {{ product.precio_venta }}</p>
+        </section>
+
+        <section class="product-cantidad ps-3 border-4 border-start border-info">
+            <h5 class="title fw-bold">Cantidad</h5>
+            <p class="field number ps-3">{{ product.cantidad }} en stock</p>
+        </section>
+
+        <section class="product-marca ps-3 border-4 border-start border-dark">
+            <h5 class="title fw-bold">Proveedor</h5>
+            <p class="field paragraph ps-3">{{ product.marca }}</p>
+        </section>
+
+        <section class="product-username ps-3 border-4 border-start border-primary">
+            <h5 class="title fw-bold">Usuario</h5>
+            <p class="field paragraph ps-3">{{ product.username }}</p>
+        </section>
+    </div>
+    <hr>
+    <div class="product_options d-flex gap-3">
+        <a href="{% url 'productos' %}"class="text-decoration-none">
+            <button type="button" class="btn btn-sm p-0 back" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Volver a Productos">
+                <span class="text text-dark paragraph">Volver</span>
+                <span class="icon icon-arrow-left2"></span>
+            </button>
+        </a>
+
+        <a href="{% url 'edit_producto' product.id %}" class="text-decoration-none">
+            <button type="button" class="btn btn-sm p-0 edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
+                <span class="text text-dark paragraph">Editar</span>
+                <span class="icon icon-pencil"></span>
+            </button>
+        </a>
+
+        <a href="#" onclick="delete_product({{ product.id }})" class="text-decoration-none">
+            <button type="button" class="btn btn-sm p-0 delete" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
+                <span class="text text-dark paragraph">Eliminar</span>
+                <span class="icon icon-bin"></span>
+            </button>
+        </a>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_product(id) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta acción es irreversible.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/delete_product/'+id+'/'
+                }
+            })
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,44 @@
+.product_options a button {
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+    outline: 1px solid #000000;
+}
+
+.product_options a button .text {
+    letter-spacing: 1.1px;
+}
+
+.product_options a .back  {
+    color: #6c757d;
+}
+
+.product_options a .edit  {
+    color: #0dcaf0;
+}
+
+.product_options a .delete {
+    color: #dc3545;
+}
+
+.product_options a button:hover {
+    outline: none;
+    box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.5);
+}
+
+.product_options a button:hover .text,
+.product_options a button:hover .icon {
+    color: #fff !important;
+}
+
+.product_options a .back:hover {
+    background-color: #6c757d !important;
+}
+
+.product_options a .edit:hover {
+    background-color: #212529 !important;
+}
+
+.product_options a .delete:hover {
+    background-color: #dc3545;
+}

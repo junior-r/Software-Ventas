@@ -182,6 +182,12 @@
                                 </button>
                             </a>
 
+                            <a href="{% url 'view_producto' p.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
+                                    <span class="icon-eye"></span>
+                                </button>
+                            </a>
+
                             <a href="{% url 'edit_producto' p.id %}" class="text-decoration-none">
                                 <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
                                     <span class="icon-pencil"></span>
@@ -219,12 +225,42 @@
         <p>Da click en el botón de <strong>+</strong> para agregar uno.</p>
     {% endif %}
 
-    <button type="button" class="add_prd_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-placement="bottom" title="Agregar un Producto">
+    <button type="button" class="add_prd_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProduct" data-bs-placement="bottom" title="Agregar un Producto">
       <span class="icon-plus"></span>
     </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal Add Product -->
+    <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'productos' %}" method="post" class="d-flex flex-column gap-4">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <div class="buttons d-flex flex-row gap-2 justify-content-between">
+                            <button type="reset" class="btn btn-secondary">Limpiar</button>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </div>
+                        <hr class="mb-0">
+                        <a href="{% url 'productos' %}">
+                            <button type="button" class="btn btn-danger">Cancelar</button>
+                        </a>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal View Product -->
+    <div class="modal fade" id="viewProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">

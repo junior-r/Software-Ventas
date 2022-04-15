@@ -98,6 +98,15 @@ def products(request):
 
 
 @login_required
+def view_product(request, id):
+    product = get_object_or_404(Producto, id=id)
+    data = {
+        'product': product
+    }
+    return render(request, 'app/view_product.html', data)
+
+
+@login_required
 def edit_product(request, id):
     producto = get_object_or_404(Producto, id=id)
     data = {

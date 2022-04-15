@@ -48,12 +48,18 @@
     gap: 1rem;
 }
 
-.product_options button {
+.product_options a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product_options a button {
     padding: 0 0.2rem !important;
     outline: none;
     transition: all .3s ease;
 }
 
-.product_options button:hover {
+.product_options a button:hover {
     outline: 1px solid #000;
 }

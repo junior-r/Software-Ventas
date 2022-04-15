@@ -49,8 +49,12 @@
     font-size: 2rem;
 }
 
-.card-body p {
+.card-body p, .paragraph {
     font-family: 'Roboto', sans-serif;
+}
+
+.number {
+    font-family: 'Nunito', sans-serif;
 }
 
 .add_user_btn,
