@@ -3,25 +3,31 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %} <title>Editar Información de Producto</title> {% endblock %}
-{% block style %}  {% endblock %}
+{% block title %}
+    <title>Editando la Información del Cliente</title>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/clientes.css' %}">
+    <link rel="stylesheet" href="{% static 'app/icons/style.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-12 col-md-6 offset-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="title">Modificar Producto</h2>
+                    <h2 class="title">Modificar Cliente</h2>
                     <hr>
                     <form action="" method="post" class="d-flex flex-column gap-4">
                         {% csrf_token %}
                         {{ form | crispy }} <!-- Este formulario lo genera django -->
                         <div class="buttons d-flex flex-row gap-2 justify-content-between">
-                            <a href="{% url 'home' %}">
-                                <button type="button" class="btn btn-primary">Ir al Home</button>
+                            <a href="{% url 'clientes' %}">
+                                <button type="button" class="btn btn-primary">Ir al Clientes</button>
                             </a>
                             <div class="accounts ">
-                                <a href="{% url 'productos' %}">
+                                <a href="{% url 'clientes' %}">
                                     <button type="button" class="btn btn-primary">Cancelar</button>
                                 </a>
                                 <button type="submit" class="btn btn-success">Guardar</button>
@@ -32,5 +38,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

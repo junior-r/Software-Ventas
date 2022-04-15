@@ -43,7 +43,7 @@
                         <a class="nav-link" href="{% url 'proveedores' %}"><span class="icon-user-tie me-3"></span> Proveedores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=""><span class="icon-cart me-3""></span> Vender</a>
+                        <a class="nav-link" href="{% url 'ventas' %}"><span class="icon-cart me-3""></span> Vender</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'clientes' %}"><span class="icon-users me-3""></span> Clientes</a>
@@ -127,7 +127,7 @@
                                     <p class="card-text">Regístra las ventas de todos tus productos.</p>
                               </div>
                               <div class="card-footer d-flex justify-content-center">
-                                  <a href="#">
+                                  <a href="{% url 'ventas' %}">
                                       <button class="go_to btn btn-primary px-5">Ver</button>
                                   </a>
                               </div>

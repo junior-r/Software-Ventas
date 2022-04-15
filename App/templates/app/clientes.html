@@ -116,16 +116,31 @@
                             <td>{{ client.telefono }}</td>
                             <td>{{ client.sexo }}</td>
                             <td class="client_options">
-                                <button type="button" class="btn p-0">
-                                    <a href="#" onclick="delete_client({{ client.id }})" class="text-decoration-none text-danger">
-                                        <span class="icon-bin"></span>
-                                    </a>
-                                </button>
-                                <button type="button" class="btn p-0">
-                                    <a href="#" class="text-decoration-none text-info">
+
+                                <a href="tel:{{ client.telefono }}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Llamar a {{ client.telefono }}">
+                                        <span class="icon-phone"></span>
+                                    </button>
+                                </a>
+
+                                <a href="mailto:{{ client.email }}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enviar email a {{ client.email }}">
+                                        <span class="icon-gmail"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'edit_client' client.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info">
                                         <span class="icon-pencil"></span>
-                                    </a>
-                                </button>
+                                    </button>
+                                </a>
+
+                                <a href="#" onclick="delete_client({{ client.id }})" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-danger">
+                                        <span class="icon-bin"></span>
+                                    </button>
+                                </a>
+
                             </td>
                         </tr>
                     {% endfor %}

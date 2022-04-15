@@ -140,85 +140,85 @@
         {% if user.username == username %}
             <h1 class="mb-3">Productos</h1>
             <table class="table table-hover">
-            <thead>
-                <tr>
-                  <th scope="col">#id</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Descripción</th>
-                  <th scope="col">P. Compra</th>
-                  <th scope="col">P. Venta</th>
-                  <th scope="col">Ganancia</th>
-                  <th scope="col">Cantidad</th>
-                  <th scope="col">Ganancia Total</th>
-                  <th scope="col">Marca</th>
-                  <th scope="col">Usuario</th>
-                  <th scope="col">Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in productos %}
+                <thead>
                     <tr>
-                        <th scope="row">{{ p.id }}</th>
-                        <td>{{ p.nombre }}</td>
-                        <td class="rows-text-1">{{ p.descripcion }}</td>
-                        <td>$ {{ p.precio_compra | intcomma }}</td>
-                        <td>$ {{ p.precio_venta | intcomma }}</td>
-                        <td>$ {{ p.get_utilities_prd | intcomma }}</td>
-                        <td>{{ p.cantidad | intcomma }}</td>
-                        <td>$ {{ p.get_utilities_total | intcomma }}</td>
-                        <td>{{ p.marca | title }}</td>
-                        <td>{{ p.username }}</td>
-                        <td class="product_options">
-
-                            <a href="{% url 'incrementar_prd' p.id %}" class="text-decoration-none">
-                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
-                                    <span class="icon-plus"></span>
-                                </button>
-                            </a>
-
-                            <a href="{% url 'decrementar_prd' p.id %}" class="text-decoration-none">
-                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
-                                    <span class="icon-minus"></span>
-                                </button>
-                            </a>
-
-                            <a href="{% url 'view_producto' p.id %}" class="text-decoration-none">
-                                <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
-                                    <span class="icon-eye"></span>
-                                </button>
-                            </a>
-
-                            <a href="{% url 'edit_producto' p.id %}" class="text-decoration-none">
-                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
-                                    <span class="icon-pencil"></span>
-                                </button>
-                            </a>
-
-                            <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none">
-                                <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
-                                    <span class="icon-bin"></span>
-                                </button>
-                            </a>
-                        </td>
+                      <th scope="col">#id</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Descripción</th>
+                      <th scope="col">P. Compra</th>
+                      <th scope="col">P. Venta</th>
+                      <th scope="col">Ganancia</th>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Ganancia Total</th>
+                      <th scope="col">Marca</th>
+                      <th scope="col">Usuario</th>
+                      <th scope="col">Opciones</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>$ {{ ganancias | intcomma }}</td>
-                    <td>{{ totalproductos | intcomma }}</td>
-                    <td>$ {{ ganancia_total | intcomma }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                        <tr>
+                            <th scope="row">{{ p.id }}</th>
+                            <td>{{ p.nombre }}</td>
+                            <td class="rows-text-1">{{ p.descripcion }}</td>
+                            <td>$ {{ p.precio_compra | intcomma }}</td>
+                            <td>$ {{ p.precio_venta | intcomma }}</td>
+                            <td>$ {{ p.get_utilities_prd | intcomma }}</td>
+                            <td>{{ p.cantidad | intcomma }}</td>
+                            <td>$ {{ p.get_utilities_total | intcomma }}</td>
+                            <td>{{ p.marca | title }}</td>
+                            <td>{{ p.username }}</td>
+                            <td class="product_options">
+
+                                <a href="{% url 'incrementar_prd' p.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
+                                        <span class="icon-plus"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'decrementar_prd' p.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
+                                        <span class="icon-minus"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'view_producto' p.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
+                                        <span class="icon-eye"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'edit_producto' p.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
+                                        <span class="icon-pencil"></span>
+                                    </button>
+                                </a>
+
+                                <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
+                                        <span class="icon-bin"></span>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>$ {{ ganancias | intcomma }}</td>
+                        <td>{{ totalproductos | intcomma }}</td>
+                        <td>$ {{ ganancia_total | intcomma }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
         {% endif %}
     {% else %}
         <h1>No tienes productos {{ user.username }}</h1>

@@ -1,0 +1,119 @@
+{% extends 'app/home.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    <title>Ventas</title>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/productos.css' %}">
+    <link rel="stylesheet" href="{% static 'app/icons/style.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="content_header d-flex justify-content-between align-items-center mb-3">
+        <div class="text">
+            <p>Busca productos por su <strong>Id</strong> y <strong>Nombre</strong>. Para vender</p>
+        </div>
+        <form action="" class="d-flex" method="get">
+            <input class="form-control me-2 fw-bold" type="search" placeholder="Buscar Productos..."
+                   aria-label="Search" name="search" value="{{ request.GET.search }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+    <hr>
+
+    {% if result_search_vent %}
+        <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th scope="col">#id</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Descripción</th>
+                      <th scope="col">P. Compra</th>
+                      <th scope="col">P. Venta</th>
+                      <th scope="col">Ganancia</th>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Ganancia Total</th>
+                      <th scope="col">Marca</th>
+                      <th scope="col">Usuario</th>
+                      <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pv in result_search_vent %}
+                        <tr>
+                            <th scope="row">{{ pv.id }}</th>
+                            <td>{{ pv.nombre }}</td>
+                            <td class="rows-text-1">{{ pv.descripcion }}</td>
+                            <td>$ {{ pv.precio_compra | intcomma }}</td>
+                            <td>$ {{ pv.precio_venta | intcomma }}</td>
+                            <td>$ {{ pv.get_utilities_prd | intcomma }}</td>
+                            <td>{{ pv.cantidad | intcomma }}</td>
+                            <td>$ {{ pv.get_utilities_total | intcomma }}</td>
+                            <td>{{ pv.marca | title }}</td>
+                            <td>{{ pv.username }}</td>
+                            <td class="product_options">
+
+                                <a href="{% url 'incrementar_prd' pv.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
+                                        <span class="icon-plus"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'decrementar_prd' pv.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
+                                        <span class="icon-minus"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'view_producto' pv.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
+                                        <span class="icon-eye"></span>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'edit_producto' pv.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
+                                        <span class="icon-pencil"></span>
+                                    </button>
+                                </a>
+
+                                <a href="#" onclick="delete_product({{ pv.id }})" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
+                                        <span class="icon-bin"></span>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>$ {{ ganancias | intcomma }}</td>
+                        <td>{{ totalproductos | intcomma }}</td>
+                        <td>$ {{ ganancia_total | intcomma }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+    {% else %}
+        {% if request.GET.search not in result_search_vent %}
+            <h3>No hay coincidencias, intenta de nuevo!</h3>
+            <p>Tú buscaste con la palabra: <span class="text-primary fs-4">{{ request.GET.search }}</span></p>
+            <a href="{% url 'ventas' %}">
+                <button class="btn btn-info mb-5">Limpiar</button>
+            </a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

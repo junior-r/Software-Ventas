@@ -285,8 +285,50 @@ def clients(request):
 
 
 @login_required
+def edit_client(request, id):
+    client = get_object_or_404(Cliente, id=id)
+    data = {
+        'form': AddClientForm(instance=client)
+    }
+
+    if request.method == 'POST':
+        form = AddClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cliente actualizado con éxito!')
+            return redirect(to='clientes')
+        else:
+            messages.error(request, 'Algún dato es inválido')
+            data['form'] = form
+
+    return render(request, 'app/edit_cliente.html', data)
+
+
+@login_required
 def delete_client(request, id):
     client = get_object_or_404(Cliente, id=id)
     client.delete()
     messages.success(request, 'Cliente eliminado exitosamente!')
     return redirect(to='clientes')
+
+
+@login_required
+def ventas(request):
+    search = request.GET.get('search')
+
+    data = {
+        'date': date
+    }
+
+    if search:
+        try:
+            result_search_vent = Producto.objects.filter(
+                Q(id__icontains=search) |
+                Q(nombre__icontains=search)
+            ).distinct()
+            data['result_search_vent'] = result_search_vent
+
+        except ValueError as ve:
+            messages.error(request, 'Solo se puede buscar por Id, Nombre, Marca y Usuario')
+
+    return render(request, 'app/ventas.html', data)
