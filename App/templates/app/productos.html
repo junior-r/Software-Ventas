@@ -194,6 +194,12 @@
                                     </button>
                                 </a>
 
+                                <a href="{% url 'add_cart' p.id %}" class="text-decoration-none">
+                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar para vender">
+                                        <span class="icon-cart"></span>
+                                    </button>
+                                </a>
+
                                 <a href="#" onclick="delete_product({{ p.id }})" class="text-decoration-none">
                                     <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
                                         <span class="icon-bin"></span>

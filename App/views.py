@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from .Cart import Cart
 from .forms import SignUpForm, AddProductForm, AddClientForm, AddMarcaForm
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -44,17 +45,17 @@ def products(request):
     user = User.objects.get(username=request.user)
     productos = Producto.objects.filter(username=user.username)
     search = request.GET.get('search')  # Este es el valor del input name='search' en el template
+    # username, ganancias, cantidad, ganancia_total = get_data_prd(productos)
 
     username = ''
     ganancias = 0
     cantidad = 0
     ganancia_total = 0
     for i in productos:
-        username = i.get_username()
+        username = i.username
         ganancias += i.get_utilities_prd()
         cantidad += i.cantidad
         ganancia_total += i.get_utilities_total()
-        # Esta es un suma secuencial de todas las ganancias por producto para dar una ganancia general
 
     data = {
         'productos': productos,
@@ -75,6 +76,7 @@ def products(request):
                 Q(username__icontains=search)
             ).distinct()
             data['result_prd'] = result_prd
+
         except ValueError as ve:
             messages.error(request, 'Solo se puede buscar por Id, Nombre, Marca y Usuario')
 
@@ -95,6 +97,37 @@ def products(request):
             return redirect(to='productos')
 
     return render(request, 'app/productos.html', data)
+
+
+@login_required
+def add_prd_cart(request, id):
+    cart = Cart(request)
+    producto = get_object_or_404(Producto, id=id)
+    cart.add(producto)
+    return redirect(to='ventas')
+
+
+@login_required
+def delete_prd_cart(request, id):
+    cart = Cart(request)
+    producto = get_object_or_404(Producto, id=id)
+    cart.delete(producto)
+    return redirect(to='ventas')
+
+
+@login_required
+def sub_prd_cart(request, id):
+    cart = Cart(request)
+    producto = get_object_or_404(Producto, id=id)
+    cart.sub(producto)
+    return redirect(to='ventas')
+
+
+@login_required
+def clean_cart(request):
+    cart = Cart(request)
+    cart.clean()
+    return redirect(to='ventas')
 
 
 @login_required
@@ -314,11 +347,32 @@ def delete_client(request, id):
 
 @login_required
 def ventas(request):
+    data = get_data_ventas(request)
+
+    return render(request, 'app/ventas.html', data)
+
+
+def get_data_ventas(request):
     search = request.GET.get('search')
 
     data = {
         'date': date
     }
+
+    total = 0
+    total_iva = total
+    precio_v_total = total
+    if request.user.is_authenticated:
+        if 'cart' in request.session.keys():
+            for k, v in request.session['cart'].items():
+                total += float(v['monto_total'])
+                precio_v_total = v['precio_v'] * v['cantidad_vender']
+                print(precio_v_total)
+                total_iva = total + (total * 0.16)
+
+    data['total_cart'] = total
+    data['precio_total_v'] = precio_v_total
+    data['total_iva'] = total_iva
 
     if search:
         try:
@@ -331,4 +385,13 @@ def ventas(request):
         except ValueError as ve:
             messages.error(request, 'Solo se puede buscar por Id, Nombre, Marca y Usuario')
 
-    return render(request, 'app/ventas.html', data)
+    clientes = Cliente.objects.all()
+    data['clientes'] = clientes
+
+    if request.method == 'POST':
+        selected_client = request.POST.get('selected_client')
+        find_client = Cliente.objects.filter(id=selected_client)
+        data['info_client'] = find_client
+        data['total_productos'] = request.session['cart'].items()
+
+    return data

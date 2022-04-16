@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block style %}
+    <link rel="stylesheet" href="{% static 'app/css/ventas.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/productos.css' %}">
     <link rel="stylesheet" href="{% static 'app/icons/style.css' %}">
 {% endblock %}
@@ -27,85 +28,91 @@
 
     {% if result_search_vent %}
         <table class="table table-hover">
-                <thead>
+            <thead>
+                <tr>
+                  <th scope="col">#id</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">P. Compra</th>
+                  <th scope="col">P. Venta</th>
+                  <th scope="col">Ganancia</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Ganancia Total</th>
+                  <th scope="col">Marca</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pv in result_search_vent %}
                     <tr>
-                      <th scope="col">#id</th>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Descripción</th>
-                      <th scope="col">P. Compra</th>
-                      <th scope="col">P. Venta</th>
-                      <th scope="col">Ganancia</th>
-                      <th scope="col">Cantidad</th>
-                      <th scope="col">Ganancia Total</th>
-                      <th scope="col">Marca</th>
-                      <th scope="col">Usuario</th>
-                      <th scope="col">Opciones</th>
+                        <th scope="row">{{ pv.id }}</th>
+                        <td>{{ pv.nombre }}</td>
+                        <td class="rows-text-1">{{ pv.descripcion }}</td>
+                        <td>$ {{ pv.precio_compra | intcomma }}</td>
+                        <td>$ {{ pv.precio_venta | intcomma }}</td>
+                        <td>$ {{ pv.get_utilities_prd | intcomma }}</td>
+                        <td>{{ pv.cantidad | intcomma }}</td>
+                        <td>$ {{ pv.get_utilities_total | intcomma }}</td>
+                        <td>{{ pv.marca | title }}</td>
+                        <td>{{ pv.username }}</td>
+                        <td class="product_options">
+
+                            <a href="{% url 'incrementar_prd' pv.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
+                                    <span class="icon-plus"></span>
+                                </button>
+                            </a>
+
+                            <a href="{% url 'decrementar_prd' pv.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
+                                    <span class="icon-minus"></span>
+                                </button>
+                            </a>
+
+                            <a href="{% url 'view_producto' pv.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
+                                    <span class="icon-eye"></span>
+                                </button>
+                            </a>
+
+                            <a href="{% url 'edit_producto' pv.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
+                                    <span class="icon-pencil"></span>
+                                </button>
+                            </a>
+
+                            <a href="{% url 'add_cart' pv.id %}" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar para vender">
+                                    <span class="icon-cart"></span>
+                                </button>
+                            </a>
+
+                            <a href="#" onclick="delete_product({{ pv.id }})" class="text-decoration-none">
+                                <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
+                                    <span class="icon-bin"></span>
+                                </button>
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for pv in result_search_vent %}
-                        <tr>
-                            <th scope="row">{{ pv.id }}</th>
-                            <td>{{ pv.nombre }}</td>
-                            <td class="rows-text-1">{{ pv.descripcion }}</td>
-                            <td>$ {{ pv.precio_compra | intcomma }}</td>
-                            <td>$ {{ pv.precio_venta | intcomma }}</td>
-                            <td>$ {{ pv.get_utilities_prd | intcomma }}</td>
-                            <td>{{ pv.cantidad | intcomma }}</td>
-                            <td>$ {{ pv.get_utilities_total | intcomma }}</td>
-                            <td>{{ pv.marca | title }}</td>
-                            <td>{{ pv.username }}</td>
-                            <td class="product_options">
-
-                                <a href="{% url 'incrementar_prd' pv.id %}" class="text-decoration-none">
-                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Incrementar la Cantidad">
-                                        <span class="icon-plus"></span>
-                                    </button>
-                                </a>
-
-                                <a href="{% url 'decrementar_prd' pv.id %}" class="text-decoration-none">
-                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Decrementar la Cantidad">
-                                        <span class="icon-minus"></span>
-                                    </button>
-                                </a>
-
-                                <a href="{% url 'view_producto' pv.id %}" class="text-decoration-none">
-                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
-                                        <span class="icon-eye"></span>
-                                    </button>
-                                </a>
-
-                                <a href="{% url 'edit_producto' pv.id %}" class="text-decoration-none">
-                                    <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar {{ p.nombre }}">
-                                        <span class="icon-pencil"></span>
-                                    </button>
-                                </a>
-
-                                <a href="#" onclick="delete_product({{ pv.id }})" class="text-decoration-none">
-                                    <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
-                                        <span class="icon-bin"></span>
-                                    </button>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>$ {{ ganancias | intcomma }}</td>
-                        <td>{{ totalproductos | intcomma }}</td>
-                        <td>$ {{ ganancia_total | intcomma }}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
     {% else %}
         {% if request.GET.search not in result_search_vent %}
             <h3>No hay coincidencias, intenta de nuevo!</h3>
@@ -115,5 +122,195 @@
             </a>
         {% endif %}
     {% endif %}
+    {% if request.session.cart.items %}
+        <div class="d-grid row">
+            <table class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th scope="col">#id</th>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Descripción</th>
+                          <th scope="col">P. Venta</th>
+                          <th scope="col">Cantidad a Vender</th>
+                          <th scope="col">I.V.A.</th>
+                          <th scope="col">Monto Total</th>
+                          <th scope="col">Marca</th>
+                          <th scope="col">Usuario</th>
+                          <th scope="col">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k, v in request.session.cart.items %}
+                            <tr>
+                                <th scope="row" class="number">{{ v.producto_id }}</th>
+                                <td>{{ v.nombre }}</td>
+                                <td class="rows-text-1">{{ v.description }}</td>
+                                <td class="number">$ {{ v.precio_v | intcomma }}</td>
+                                <td class="number">{{ v.cantidad_vender }}</td>
+                                <td class="number"></td>
+                                <td class="number">$ {{ v.precio_v }}</td>
+                                <td>{{ v.proveedor | title }}</td>
+                                <td>{{ v.username }}</td>
+                                <td class="product_options">
 
+                                    <a href="{% url 'add_cart' v.producto_id %}" class="text-decoration-none">
+                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar para vender">
+                                            <span class="icon-plus"></span>
+                                        </button>
+                                    </a>
+
+                                    <a href="{% url 'sub_cart' v.producto_id %}" class="text-decoration-none">
+                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar para vender">
+                                            <span class="icon-minus"></span>
+                                        </button>
+                                    </a>
+
+                                    <a href="{% url 'view_producto' v.producto_id %}" class="text-decoration-none">
+                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
+                                            <span class="icon-eye"></span>
+                                        </button>
+                                    </a>
+
+                                    <a href="#" onclick="delete_prd_cart({{ v.producto_id }})" class="text-decoration-none">
+                                        <button type="button" class="btn p-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ p.nombre }}">
+                                            <span class="icon-bin"></span>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="number">$ {{ total_cart | intcomma }}</td>
+                            <td></td>
+                            <td class="number">16%</td>
+                            <td class="number">$ {{ total_iva | intcomma }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+            </table>
+            <div class="card w-100">
+                <div class="card-body">
+                    <h2 class="text-center">Clientes</h2>
+                    <p>Selecciona un cliente para venderle</p>
+                    <p class="alert-warning py-1 px-3"><strong>Nota:</strong> Solo puedes vender a un cliente a la vez.</p>
+                    {% if clientes %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% for c in clientes %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" value="{{ c.id }}" id="flexCheckChecked" name="selected_client">
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        #{{ c.id }}
+                                        {{ c.nombres }}
+                                        {{ c.apellidos }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <div class="container-buttons mt-3 d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                                <button type="reset" class="btn btn-info">Limpiar</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <p>No tienes clientes</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-7">
+                <h3>No hay productos para vender</h3>
+                <h5>Busca uno arriba :)</h5>
+            </div>
+        </div>
+    {% endif %}
+
+    <button type="button" class="add_prd_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProduct" data-bs-placement="bottom" title="Agregar un Producto">
+      <span class="icon-checkmark"></span>
+    </button>
+
+    <!-- Modal Venta -->
+    <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Venta de Productos</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center">Software Ventas</h2>
+                    <h4 class="text-center">Factura</h4>
+                    <p class="text-center date">Fecha actual: {{ date.day }}/{{ date.month }}/{{ date.year }}</p>
+                    {% for client in info_client %}
+                        <p>Nombre del Cliente: {{ client.nombres }} {{ client.apellidos }}</p>
+                        <p>Cédula del Cliente: {{ client.cedula | intcomma }}</p>
+                        <hr>
+                        <h4 class="text-center">Productos {{ precio_v_total }}</h4>
+                            {% if request.session.cart.items %}
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Cantidad</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Precio Unitario</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for k, v in request.session.cart.items %}
+                                            <tr>
+                                                <th scope="row" class="number">{{ v.producto_id }}</th>
+                                                <td class="number">{{ v.cantidad_vender }}</td>
+                                                <td class="title">{{ v.nombre }}</td>
+                                                <td class="number">$ {{ v.precio_v }}</td>
+                                                <td class="number">$ {{ precio_v_total | intcomma }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p class="alert-info py-1 px-3">No hay Producto en el Carro de Ventas</p>
+                            {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_prd_cart(id) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta borrando el producto del carrito.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/delete_prd_cart/'+id+'/'
+                }
+            })
+        }
+    </script>
 {% endblock %}
