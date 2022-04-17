@@ -1,3 +1,4 @@
+import random
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -6,7 +7,7 @@ from .Cart import Cart
 from .forms import SignUpForm, AddProductForm, AddClientForm, AddMarcaForm
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from .models import Marca, Producto, Cliente
+from .models import Marca, Producto, Cliente, Factura
 import datetime
 
 # Create your views here.
@@ -360,6 +361,7 @@ def get_data_ventas(request):
     }
 
     total = 0
+    total_iva = 0
     iva = 0.16  # Valor del I.V.A. en Venezuela
     if request.user.is_authenticated:
         if 'cart' in request.session.keys():
@@ -387,6 +389,7 @@ def get_data_ventas(request):
 
     clientes = Cliente.objects.all()
     data['clientes'] = clientes
+    factura_id = 0
 
     if request.method == 'POST':
         selected_client = request.POST.get('selected_client')
@@ -394,4 +397,53 @@ def get_data_ventas(request):
         data['info_client'] = find_client
         data['total_productos'] = request.session['cart'].items()
 
+        numeros = '0123456789'
+
+        lista_productos = []
+        if request.user.is_authenticated:
+            for c in find_client:
+                for v in request.session['cart'].values():
+                    lista_productos.append(v['producto_id'])
+                muestra = random.sample(numeros, 5)
+                n_factura = ''.join(muestra)
+                factura = Factura.objects.create(n_factura=int(n_factura), cliente_id=c.id, productos=lista_productos)
+                factura.save()
+                factura_id += factura.id
+
+    data['factura_id'] = factura_id
+    print(data)
     return data
+
+
+@login_required
+def factura_ventas(request, id):
+    try:
+        factura = Factura.objects.get(id=id)
+        client_compra = Cliente.objects.filter(id=factura.cliente_id)
+
+        data = {
+            'date': date,
+            'factura': factura,
+            'id_factura': factura.id,
+            'cliente': client_compra
+        }
+
+        total = 0
+        total_iva = 0
+        iva = 0.16  # Valor del I.V.A. en Venezuela
+        if request.user.is_authenticated:
+            if 'cart' in request.session.keys():
+                for k, v in request.session['cart'].items():
+                    total += float(v['monto_total'])  # devuelve todos los precios unitarios sumados
+                    total_iva = total + (total * iva)  # devuelve todos los precios unitarios sumados y multiplicados * iva
+                    precio_iva_total = total * iva
+                    # devuelve el valor del iva con respecto a todos los precios unitarios sumados
+                    data['precio_iva_total'] = precio_iva_total
+        data['total_iva'] = total_iva
+        data['total_cart'] = total
+
+    except:
+        messages.error(request, 'Seleccione un cliente para verder, y después presione el boton Enviar')
+        return redirect(to='ventas')
+
+    return render(request, 'app/factura_ventas.html', data)

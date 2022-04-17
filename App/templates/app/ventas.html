@@ -26,6 +26,7 @@
     </div>
     <hr>
 
+    <!-- Resultados de la busqueda -->
     {% if result_search_vent %}
         <table class="table table-hover">
             <thead>
@@ -122,8 +123,11 @@
             </a>
         {% endif %}
     {% endif %}
+
+
     {% if request.session.cart.items %}
         <div class="d-grid row">
+            <!-- Listado de productos en el carrito -->
             <table class="table table-hover">
                     <thead>
                         <tr>
@@ -185,7 +189,21 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="number">$ {{ total_cart }}</td>
+                            <td class="number"></td>
+                            <td></td>
+                            <td class="number">16%</td>
+                            <td class="number">$ {{ total_cart | intcomma }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td class="number">16%</td>
                             <td class="number">$ {{ total_iva | intcomma }}</td>
@@ -197,6 +215,8 @@
                         </tr>
                     </tfoot>
             </table>
+
+             <!-- Listado de Clientes a seleccionar -->
             <div class="card w-100">
                 <div class="card-body">
                     <h2 class="text-center">Clientes</h2>
@@ -235,11 +255,16 @@
         </div>
     {% endif %}
 
-    <button type="button" class="add_prd_btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProduct" data-bs-placement="bottom" title="Agregar un Producto">
-      <span class="icon-checkmark"></span>
-    </button>
+     <!-- Botón para generar factura -->
+    {% if request.session.cart.items %}
+    <a href="{% url 'factura_ventas' factura_id %}">
+        <button type="submit" class="add_prd_btn btn btn-primary">
+          <span class="icon-checkmark"></span>
+        </button>
+    </a>
+    {% endif %}
 
-    <!-- Modal Venta -->
+    <!-- Factura -->
     <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">

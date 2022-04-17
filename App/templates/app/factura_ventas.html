@@ -1,0 +1,71 @@
+{% extends 'app/home.html' %}
+{% block title %} <title>Factura de Venta</title> {% endblock %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-center">Software Ventas</h1>
+            <h3 class="text-center">Factura N° {{ factura.n_factura }}</h3>
+            <p class="text-center date"><strong>Fecha:</strong> <span class="number">{{ factura.fecha }}</span></p>
+            {% for c in cliente %}
+                <p class="text-center">Nombre del Cliente: {{ c.nombres }} {{ c.apellidos }}</p>
+                <p class="text-center">Cédula del Cliente: {{ c.cedula | intcomma }}</p>
+            {% endfor %}
+            <h4>Productos</h4>
+            {% if request.session.cart.items %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Precio Unitario</th>
+                            <th scope="col"></th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k, v in request.session.cart.items %}
+                            <tr>
+                                <th scope="row" class="number">{{ v.producto_id }}</th>
+                                <td class="number">{{ v.cantidad_vender }}</td>
+                                <td class="title">{{ v.nombre }}</td>
+                                <td class="number">$ {{ v.precio_v }}</td>
+                                <td class="number"></td>
+                                <td class="number">$ {{ v.monto_total }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="title fw-bold">Subtotal</td>
+                            <td class="number">$ {{ total_cart | intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="number fw-bold">I.V.A. 16%</td>
+                            <td class="number">$ {{ precio_iva_total | intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="title fw-bold">Total a Pagar:</td>
+                            <td class="number">$ {{ total_iva | intcomma }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

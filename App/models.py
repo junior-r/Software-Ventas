@@ -48,6 +48,17 @@ class Cliente(models.Model):
     email = models.EmailField(unique=False, blank=False)
     telefono = models.IntegerField(unique=False, blank=False)
     sexo = models.CharField(choices=options_sex, unique=False, blank=False, max_length=9)
+    productos_comprados = models.ManyToManyField(Producto)
 
     def __str__(self):
         return '{} {}'.format(self.nombres, self.apellidos)
+
+
+class Factura(models.Model):
+    n_factura = models.IntegerField(unique=True)
+    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
+    productos = models.CharField(max_length=200, default=None)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return int(self.n_factura)
