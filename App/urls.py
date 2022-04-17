@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import home, signup, proveedores, delete_proveedor, products, increment_cantidad_prd, \
     decrement_cantidad_prd, delete_product, users, delete_user, clients, delete_client, edit_product, \
-    edit_proveedor, view_product, edit_client, ventas, add_prd_cart, sub_prd_cart, delete_prd_cart, clean_cart
+    edit_proveedor, view_product, edit_client, ventas, add_prd_cart, sub_prd_cart, delete_prd_cart, \
+    clean_cart
 
 urlpatterns = [
     path('', home, name='home'),

@@ -360,18 +360,18 @@ def get_data_ventas(request):
     }
 
     total = 0
-    total_iva = total
-    precio_v_total = total
+    iva = 0.16  # Valor del I.V.A. en Venezuela
     if request.user.is_authenticated:
         if 'cart' in request.session.keys():
             for k, v in request.session['cart'].items():
-                total += float(v['monto_total'])
-                precio_v_total = v['precio_v'] * v['cantidad_vender']
-                print(precio_v_total)
-                total_iva = total + (total * 0.16)
+                total += float(v['monto_total'])  # devuelve todos los precios unitarios sumados
+                total_iva = total + (total * iva)  # devuelve todos los precios unitarios sumados y multiplicados * iva
+                precio_iva_total = total * iva
+                # devuelve el valor del iva con respecto a todos los precios unitarios sumados
+                data['precio_iva_total'] = precio_iva_total
 
+    data['iva'] = iva
     data['total_cart'] = total
-    data['precio_total_v'] = precio_v_total
     data['total_iva'] = total_iva
 
     if search:

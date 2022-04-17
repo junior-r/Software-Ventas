@@ -148,7 +148,7 @@
                                 <td class="number">$ {{ v.precio_v | intcomma }}</td>
                                 <td class="number">{{ v.cantidad_vender }}</td>
                                 <td class="number"></td>
-                                <td class="number">$ {{ v.precio_v }}</td>
+                                <td class="number">$ {{ v.monto_total }}</td>
                                 <td>{{ v.proveedor | title }}</td>
                                 <td>{{ v.username }}</td>
                                 <td class="product_options">
@@ -185,7 +185,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="number">$ {{ total_cart | intcomma }}</td>
+                            <td class="number">$ {{ total_cart }}</td>
                             <td></td>
                             <td class="number">16%</td>
                             <td class="number">$ {{ total_iva | intcomma }}</td>
@@ -252,7 +252,7 @@
                 <div class="card-body">
                     <h2 class="text-center">Software Ventas</h2>
                     <h4 class="text-center">Factura</h4>
-                    <p class="text-center date">Fecha actual: {{ date.day }}/{{ date.month }}/{{ date.year }}</p>
+                    <p class="text-center date"><strong>Fecha actual:</strong> {{ date.day }}/{{ date.month }}/{{ date.year }} <strong>Hora:</strong> {{ date.hour }}:{{ date.minute }}:{{ date.second }}</p>
                     {% for client in info_client %}
                         <p>Nombre del Cliente: {{ client.nombres }} {{ client.apellidos }}</p>
                         <p>Cédula del Cliente: {{ client.cedula | intcomma }}</p>
@@ -266,6 +266,7 @@
                                             <th scope="col">Cantidad</th>
                                             <th scope="col">Nombre</th>
                                             <th scope="col">Precio Unitario</th>
+                                            <th scope="col">I.V.A.</th>
                                             <th scope="col">Total</th>
                                         </tr>
                                     </thead>
@@ -276,10 +277,30 @@
                                                 <td class="number">{{ v.cantidad_vender }}</td>
                                                 <td class="title">{{ v.nombre }}</td>
                                                 <td class="number">$ {{ v.precio_v }}</td>
-                                                <td class="number">$ {{ precio_v_total | intcomma }}</td>
+                                                <td class="number"></td>
+                                                <td class="number">$ {{ v.monto_total }}</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
+                                    <tfoot>
+                                    <p>{{ precio_v_iva }}</p>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="number fw-bold">16%</td>
+                                            <td class="number">$ {{ precio_iva_total | intcomma }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="title fw-bold">Total a Pagar:</td>
+                                            <td class="number">$ {{ total_iva | intcomma }}</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             {% else %}
                                 <p class="alert-info py-1 px-3">No hay Producto en el Carro de Ventas</p>
