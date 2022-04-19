@@ -43,7 +43,8 @@ class AddClientForm(forms.ModelForm):
 
     class Meta:
         model = Cliente
-        fields = '__all__'
+        fields = ['nombres', 'apellidos', 'cedula', 'email', 'telefono', 'sexo']
+        exclude = ['productos_comprados']
 
 
 class AddMarcaForm(forms.ModelForm):

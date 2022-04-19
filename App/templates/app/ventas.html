@@ -257,7 +257,7 @@
 
      <!-- Botón para generar factura -->
     {% if request.session.cart.items %}
-    <a href="{% url 'factura_ventas' factura_id %}">
+    <a href="{% url 'factura_ventas' n_factura %}">
         <button type="submit" class="add_prd_btn btn btn-primary">
           <span class="icon-checkmark"></span>
         </button>

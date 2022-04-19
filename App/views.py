@@ -9,6 +9,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .models import Marca, Producto, Cliente, Factura
 import datetime
+import os
+from django.conf import settings
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+
 
 # Create your views here.
 
@@ -410,22 +417,23 @@ def get_data_ventas(request):
                 factura.save()
                 factura_id += factura.id
 
-    data['factura_id'] = factura_id
-    print(data)
+    data['n_factura'] = factura.n_factura
     return data
 
 
 @login_required
-def factura_ventas(request, id):
+def factura_ventas(request, n_factura):
     try:
-        factura = Factura.objects.get(id=id)
+        factura = Factura.objects.get(n_factura=n_factura)
         client_compra = Cliente.objects.filter(id=factura.cliente_id)
+        facura_pdf = get_template('app/factura_ventas.html')
 
         data = {
             'date': date,
             'factura': factura,
             'id_factura': factura.id,
-            'cliente': client_compra
+            'cliente': client_compra,
+            'descargar_factura': facura_pdf
         }
 
         total = 0
@@ -439,8 +447,11 @@ def factura_ventas(request, id):
                     precio_iva_total = total * iva
                     # devuelve el valor del iva con respecto a todos los precios unitarios sumados
                     data['precio_iva_total'] = precio_iva_total
+                    data['items_cart'] = request.session['cart'].items()
+
         data['total_iva'] = total_iva
         data['total_cart'] = total
+        messages.success(request, 'Factura generada con exito!')
 
     except:
         messages.error(request, 'Seleccione un cliente para verder, y después presione el boton Enviar')

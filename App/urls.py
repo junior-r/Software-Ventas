@@ -32,5 +32,5 @@ urlpatterns = [
     # Acciones de Usuarios
     path('delete_user/<id>/', delete_user, name='delete_user'),
     # Factura de ventas
-    path('factura/<int:id>/', factura_ventas, name='factura_ventas'),
+    path('factura/<n_factura>/', factura_ventas, name='factura_ventas'),
 ]
