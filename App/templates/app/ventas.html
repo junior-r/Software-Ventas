@@ -241,7 +241,7 @@
                             </div>
                         </form>
                     {% else %}
-                        <p>No tienes clientes</p>
+                        <p class="alert-danger py-1 px-3">No tienes clientes. Crea uno <a href="{% url 'clientes' %}" class="text-primary text-decoration-none">aquí</a></p>
                     {% endif %}
                 </div>
             </div>
@@ -256,87 +256,13 @@
     {% endif %}
 
      <!-- Botón para generar factura -->
-    {% if request.session.cart.items %}
-    <a href="{% url 'factura_ventas' n_factura %}">
+    {% if request.session.cart.items and clientes and factura %}
+    <a href="{% url 'factura_ventas' factura.n_factura %}">
         <button type="submit" class="add_prd_btn btn btn-primary">
           <span class="icon-checkmark"></span>
         </button>
     </a>
     {% endif %}
-
-    <!-- Factura -->
-    <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Venta de Productos</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="text-center">Software Ventas</h2>
-                    <h4 class="text-center">Factura</h4>
-                    <p class="text-center date"><strong>Fecha actual:</strong> {{ date.day }}/{{ date.month }}/{{ date.year }} <strong>Hora:</strong> {{ date.hour }}:{{ date.minute }}:{{ date.second }}</p>
-                    {% for client in info_client %}
-                        <p>Nombre del Cliente: {{ client.nombres }} {{ client.apellidos }}</p>
-                        <p>Cédula del Cliente: {{ client.cedula | intcomma }}</p>
-                        <hr>
-                        <h4 class="text-center">Productos {{ precio_v_total }}</h4>
-                            {% if request.session.cart.items %}
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Cantidad</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Precio Unitario</th>
-                                            <th scope="col">I.V.A.</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for k, v in request.session.cart.items %}
-                                            <tr>
-                                                <th scope="row" class="number">{{ v.producto_id }}</th>
-                                                <td class="number">{{ v.cantidad_vender }}</td>
-                                                <td class="title">{{ v.nombre }}</td>
-                                                <td class="number">$ {{ v.precio_v }}</td>
-                                                <td class="number"></td>
-                                                <td class="number">$ {{ v.monto_total }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                    <tfoot>
-                                    <p>{{ precio_v_iva }}</p>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="number fw-bold">16%</td>
-                                            <td class="number">$ {{ precio_iva_total | intcomma }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="title fw-bold">Total a Pagar:</td>
-                                            <td class="number">$ {{ total_iva | intcomma }}</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            {% else %}
-                                <p class="alert-info py-1 px-3">No hay Producto en el Carro de Ventas</p>
-                            {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
 {% endblock %}
 

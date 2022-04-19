@@ -1,4 +1,5 @@
 import random
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -8,13 +9,7 @@ from .forms import SignUpForm, AddProductForm, AddClientForm, AddMarcaForm
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .models import Marca, Producto, Cliente, Factura
-import datetime
-import os
-from django.conf import settings
-from django.http import HttpResponse
 from django.template.loader import get_template
-from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
 
 
 # Create your views here.
@@ -356,7 +351,6 @@ def delete_client(request, id):
 @login_required
 def ventas(request):
     data = get_data_ventas(request)
-
     return render(request, 'app/ventas.html', data)
 
 
@@ -396,28 +390,30 @@ def get_data_ventas(request):
 
     clientes = Cliente.objects.all()
     data['clientes'] = clientes
-    factura_id = 0
+    factura = ''
+    data['factura'] = factura
+
 
     if request.method == 'POST':
         selected_client = request.POST.get('selected_client')
         find_client = Cliente.objects.filter(id=selected_client)
+
         data['info_client'] = find_client
         data['total_productos'] = request.session['cart'].items()
 
         numeros = '0123456789'
+        muestra = random.sample(numeros, 5)
+        n_factura = ''.join(muestra)
 
         lista_productos = []
-        if request.user.is_authenticated:
-            for c in find_client:
-                for v in request.session['cart'].values():
-                    lista_productos.append(v['producto_id'])
-                muestra = random.sample(numeros, 5)
-                n_factura = ''.join(muestra)
-                factura = Factura.objects.create(n_factura=int(n_factura), cliente_id=c.id, productos=lista_productos)
-                factura.save()
-                factura_id += factura.id
+        for c in find_client:
+            for v in request.session['cart'].values():
+                lista_productos.append(v['producto_id'])
 
-    data['n_factura'] = factura.n_factura
+            factura = Factura.objects.create(n_factura=int(n_factura), cliente_id=c.id, productos=lista_productos)
+            factura.save()
+            data['factura'] = factura
+
     return data
 
 
