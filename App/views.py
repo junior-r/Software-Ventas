@@ -18,8 +18,11 @@ date = datetime.datetime.now()
 
 
 def home(request):
+    productos = Producto.objects.all()
+
     data = {
-        'date': date
+        'date': date,
+        'productos': productos
     }
     return render(request, 'app/home.html', data)
 

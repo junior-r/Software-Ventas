@@ -78,6 +78,19 @@
       </div>
     </nav>
 
+    {% if user.is_authenticated %}
+        {% if productos %}
+            {% for p in productos %}
+                {% if p.cantidad <= 5 %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Advertencia:</strong> La cantidad del producto <span class="text-primary">{{ p.nombre }}</span> está por debajo de 5
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
     <div class="container-fluid pt-3 pb-5 px-5" style="min-height: 100vh">
         {% block content %}
             <div class="content container">
