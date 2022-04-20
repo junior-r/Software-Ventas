@@ -2,7 +2,7 @@ from django.urls import path
 from .views import home, signup, proveedores, delete_proveedor, products, increment_cantidad_prd, \
     decrement_cantidad_prd, delete_product, users, delete_user, clients, delete_client, edit_product, \
     edit_proveedor, view_product, edit_client, ventas, add_prd_cart, sub_prd_cart, delete_prd_cart, \
-    clean_cart, factura_ventas
+    clean_cart, factura_ventas, delete_factura
 
 urlpatterns = [
     path('', home, name='home'),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('delete_product/<id>/', delete_product, name='delete_product'),
     # Acciones de Clientes
     path('edit_cliente/<id>/', edit_client, name='edit_client'),
-    path('clients/delete_client/<id>/', delete_client, name='delete_client'),
+    path('delete_client/<id>/', delete_client, name='delete_client'),
     # Acciones de Proveedores
     path('edit_proveedor/<id>/', edit_proveedor, name='edit_proveedor'),
     path('delete_proveedor/<id>/', delete_proveedor, name='delete_prov'),
@@ -33,4 +33,5 @@ urlpatterns = [
     path('delete_user/<id>/', delete_user, name='delete_user'),
     # Factura de ventas
     path('factura/<n_factura>/', factura_ventas, name='factura_ventas'),
+    path('delete_factura/<n_factura>/', delete_factura, name='dalete_factura'),
 ]

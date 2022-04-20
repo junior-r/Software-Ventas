@@ -70,9 +70,36 @@
     </div>
 
     <a href="" download="Factura {{ descargar_factura }}">
-        <button type="button" class="add_prd_btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#addProduct" data-bs-placement="bottom" title="Descargar Factura N° {{ factura.n_factura }}">
+        <button type="button" class="download_factura btn btn-warning" data-bs-toggle="modal" data-bs-target="#addProduct" data-bs-placement="bottom" title="Descargar Factura N° {{ factura.n_factura }}">
             <span class="icon-arrow-down2 text-white"></span>
         </button>
     </a>
 
+    <a href="#" onclick="delete_factura({{ factura.n_factura }})">
+        <button class="delete_factura btn btn-danger" data-bs-placement="bottom" title="Borrar Factura N° {{ factura.n_factura }}">
+            <span class="icon-bin text-white"></span>
+        </button>
+    </a>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_factura(n_factura) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta acción es irreversible.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/delete_factura/'+n_factura+'/'
+                }
+            })
+        }
+    </script>
 {% endblock %}

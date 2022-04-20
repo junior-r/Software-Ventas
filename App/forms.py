@@ -5,13 +5,16 @@ from App.models import Marca, Producto, Cliente
 
 
 class SignUpForm(UserCreationForm):
+    username = forms.CharField(label='Nombre de Usuario')
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2']
 
 
 class AddProductForm(forms.ModelForm):
-    username = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Por seguridad ingrese su nombre de usuario, ej: john'}))
+    username = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={'placeholder': 'Por seguridad ingrese su nombre de usuario, ej: john'}), label='Nombre de Usuario')
 
     def clean_username(self):  # Valida si el usuario existe en la Base de Datos
         username = self.cleaned_data['username']

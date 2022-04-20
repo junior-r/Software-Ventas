@@ -60,12 +60,35 @@
 .add_user_btn,
 .add_prd_btn,
 .add_client_btn,
-.add_prov_btn {
+.clean_cart,
+.add_prov_btn,
+.ready_factura,
+.download_factura,
+.delete_factura {
     border-radius: 50% !important;
     padding: 0.5rem 0.75rem !important;
     position: fixed;
     bottom: 5rem;
     right: 2rem;
+    transition: all 0.3s ease-in-out !important;
+}
+
+.clean_cart,
+.delete_factura {
+    left: 2rem;
+    right: unset;
+}
+
+.add_user_btn:hover,
+.add_prd_btn:hover,
+.add_client_btn:hover,
+.clean_cart:hover,
+.add_prov_btn:hover,
+.ready_factura:hover,
+.download_factura:hover,
+.delete_factura:hover {
+    transform: rotateZ(360deg) scale(1.4);
+    box-shadow: 1px 1px 15px 1px rgba(0, 0, 0, 0.5);
 }
 
 .footer {

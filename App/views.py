@@ -47,8 +47,7 @@ def signup(request):
 def products(request):
     user = User.objects.get(username=request.user)
     productos = Producto.objects.filter(username=user.username)
-    search = request.GET.get('search')  # Este es el valor del input name='search' en el template
-    # username, ganancias, cantidad, ganancia_total = get_data_prd(productos)
+    search = request.GET.get('search')  # Este es el valor del input name='search' en el template.
 
     username = ''
     ganancias = 0
@@ -70,6 +69,7 @@ def products(request):
         'date': date
     }
 
+    # Acción de búsqueda, filtra las búsquedas por Id, Nombre, Marca(Proveedor) y Username
     if search:
         try:
             result_prd = Producto.objects.filter(
@@ -104,6 +104,7 @@ def products(request):
 
 @login_required
 def add_prd_cart(request, id):
+    # Por cada click incrementa la cantidad de productos a vender.
     cart = Cart(request)
     producto = get_object_or_404(Producto, id=id)
     cart.add(producto)
@@ -120,6 +121,7 @@ def delete_prd_cart(request, id):
 
 @login_required
 def sub_prd_cart(request, id):
+    # Por cada click decrementa la cantidad de productos a vender.
     cart = Cart(request)
     producto = get_object_or_404(Producto, id=id)
     cart.sub(producto)
@@ -128,6 +130,11 @@ def sub_prd_cart(request, id):
 
 @login_required
 def clean_cart(request):
+    """
+    * Con un click elimina todos los productos en el carrito.
+    * Antes de eliminarlos manda una alerta de confirmación, para estar seguros de la acción.
+    * La alerta el por medio de JavaScript, en una función llamada clean_cart().
+    """
     cart = Cart(request)
     cart.clean()
     return redirect(to='ventas')
@@ -163,7 +170,7 @@ def edit_product(request, id):
 
 @login_required
 def increment_cantidad_prd(request, id):
-    # Incrementa la cantidad del producto de 1 en 1
+    # Incrementa la cantidad del producto de 1 en 1 por cada click en el icono de más +.
     producto = Producto.objects.filter(id=id)
     for p in producto:
         cantidad = p.cantidad
@@ -174,11 +181,19 @@ def increment_cantidad_prd(request, id):
 
 @login_required
 def decrement_cantidad_prd(request, id):
-    # Reduce la cantidad del producto de 1 en 1
+    # Reduce la cantidad del producto de 1 en 1 por cada click en el icono de menos -.
     producto = Producto.objects.filter(id=id)
     for p in producto:
         cantidad = p.cantidad
-        producto.update(cantidad=cantidad - 1)
+        if cantidad <= 0:
+            del p
+            """
+            Evalua si la cantidad del Producto en cuéstión es menor ó igual a cero(0)
+                - Si lo es, Borra el producto de base de datos.
+                - Si no lo es, lo actualiza con su nuevo valor.
+            """
+        else:
+            producto.update(cantidad=cantidad - 1)
 
     return redirect(to='productos')
 
@@ -206,6 +221,7 @@ def proveedores(request):
         'date': date
     }
 
+    # Acción de búsqueda, filtra las búsquedas por Id, Nombre y Correo Electrónico.
     if search:
         try:
             result_prov = Marca.objects.filter(
@@ -299,6 +315,7 @@ def clients(request):
         'date': date
     }
 
+    # Acción de búsqueda, filtra las búsquedas por Id, Nombre y Cédula.
     if busqueda:
         result_client = Cliente.objects.filter(
             Q(id__icontains=busqueda) |
@@ -377,6 +394,7 @@ def get_data_ventas(request):
     data['total_cart'] = total
     data['total_iva'] = total_iva
 
+    # Acción de búsqueda, filtra las búsquedas por Id y Nombre.
     if search:
         try:
             result_search_vent = Producto.objects.filter(
@@ -445,6 +463,16 @@ def factura_ventas(request, n_factura):
                     data['precio_iva_total'] = precio_iva_total
                     data['items_cart'] = request.session['cart'].items()
 
+                    """
+                    * Actualizar la cantidad de los productos vendidos
+                      -  cantidad_en_BD = cantidad_en_BD - cantidad_vendida
+                    """
+                    productos_cart = Producto.objects.filter(id=v['producto_id'])
+                    for producto in productos_cart:
+                        cantidad_total = producto.cantidad
+                        cantidad_vender = v['cantidad_vender']
+                        productos_cart.update(cantidad=cantidad_total - cantidad_vender)
+
         data['total_iva'] = total_iva
         data['total_cart'] = total
         messages.success(request, 'Factura generada con exito!')
@@ -454,3 +482,11 @@ def factura_ventas(request, n_factura):
         return redirect(to='ventas')
 
     return render(request, 'app/factura_ventas.html', data)
+
+
+@login_required
+def delete_factura(request, n_factura):
+    factura = get_object_or_404(Factura, n_factura=n_factura)
+    factura.delete()
+    messages.success(request, f'Factura #{factura.n_factura} borrada con éxito!')
+    return redirect(to='ventas')

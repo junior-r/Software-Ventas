@@ -255,13 +255,20 @@
         </div>
     {% endif %}
 
-     <!-- Botón para generar factura -->
     {% if request.session.cart.items and clientes and factura %}
-    <a href="{% url 'factura_ventas' factura.n_factura %}">
-        <button type="submit" class="add_prd_btn btn btn-primary">
-          <span class="icon-checkmark"></span>
-        </button>
-    </a>
+        <!-- Botón para generar la factura -->
+        <a href="{% url 'factura_ventas' factura.n_factura %}">
+            <button type="submit" class="ready_factura btn btn-primary"  data-bs-placement="bottom" title="Terminar Factura">
+                <span class="icon-checkmark"></span>
+            </button>
+        </a>
+
+        <!-- Botón para limpiar el carrito de compras -->
+        <a href="#" onclick="clean_cart()">
+            <button type="button" class="clean_cart btn btn-danger"  data-bs-placement="bottom" title="Limpiar Carrito">
+                <span class="icon-x"></span>
+            </button>
+        </a>
     {% endif %}
 
 {% endblock %}
@@ -284,5 +291,23 @@
                 }
             })
         }
+
+        function clean_cart() {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Se borrarán todos los productos del carrito.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Limpiar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/clean_cart/'
+                }
+            })
+        }
+
     </script>
 {% endblock %}

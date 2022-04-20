@@ -26,9 +26,17 @@ class Producto(models.Model):
         return self.username
 
     def get_utilities_prd(self):
+        """
+        Retorna la ganancia por producto.
+            - Precio_de_Venta - Precio_de_Compra = Ganancia por Producto.
+        """
         return self.precio_venta - self.precio_compra
 
     def get_utilities_total(self):
+        """
+        Retorna la ganancia por producto Mutiplicada por la cantidad.
+            - (Precio_de_Venta - Precio_de_Compra) * Cantidad_del_Producto = Ganancia total del Producto.
+        """
         return (self.precio_venta - self.precio_compra) * self.cantidad
 
     def __str__(self):

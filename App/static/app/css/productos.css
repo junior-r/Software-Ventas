@@ -57,7 +57,7 @@
 .product_options a button {
     padding: 0 0.2rem !important;
     outline: none;
-    transition: all .3s ease;
+    transition: all .3s ease !important;
 }
 
 .product_options a button:hover {
