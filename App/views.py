@@ -488,5 +488,15 @@ def factura_ventas(request, n_factura):
 def delete_factura(request, n_factura):
     factura = get_object_or_404(Factura, n_factura=n_factura)
     factura.delete()
+
+    if request.user.is_authenticated:
+        if 'cart' in request.session.keys():
+            for k, v in request.session['cart'].items():
+                productos_cart = Producto.objects.filter(id=v['producto_id'])
+                for producto in productos_cart:
+                    cantidad_total = producto.cantidad
+                    cantidad_vender = v['cantidad_vender']
+                    productos_cart.update(cantidad=cantidad_total + cantidad_vender)
+
     messages.success(request, f'Factura #{factura.n_factura} borrada con éxito!')
     return redirect(to='ventas')

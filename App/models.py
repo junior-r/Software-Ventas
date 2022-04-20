@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -66,7 +67,7 @@ class Factura(models.Model):
     n_factura = models.IntegerField(unique=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     productos = models.CharField(max_length=200, default=None)
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return int(self.n_factura)
