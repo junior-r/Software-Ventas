@@ -244,7 +244,7 @@ def proveedores(request):
             return redirect(to='proveedores')
         else:
             messages.error(request, 'Algún dato es inválido. Intente otra vez.')
-            data['form_proveedor'] = form
+            data['form'] = form
 
     return render(request, 'app/marcas.html', data)
 
