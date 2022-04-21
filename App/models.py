@@ -7,7 +7,7 @@ from django.utils import timezone
 
 class Marca(models.Model):
     nombre = models.CharField(max_length=150)
-    telefono = models.IntegerField()
+    telefono = models.BigIntegerField()
     email = models.EmailField()
 
     def __str__(self):
@@ -53,9 +53,9 @@ options_sex = (
 class Cliente(models.Model):
     nombres = models.CharField(max_length=150, unique=False, blank=False)
     apellidos = models.CharField(max_length=150, unique=False, blank=False)
-    cedula = models.IntegerField(unique=True, blank=False)
+    cedula = models.BigIntegerField(unique=True, blank=False)
     email = models.EmailField(unique=False, blank=False)
-    telefono = models.IntegerField(unique=False, blank=False)
+    telefono = models.BigIntegerField(unique=False, blank=False)
     sexo = models.CharField(choices=options_sex, unique=False, blank=False, max_length=9)
     productos_comprados = models.ManyToManyField(Producto)
 
