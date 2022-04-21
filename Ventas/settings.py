@@ -84,8 +84,12 @@ WSGI_APPLICATION = 'Ventas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd3km9lj33jsmmg',
+        'HOST': 'ec2-54-80-122-11.compute-1.amazonaws.com',
+        'USER': 'rypwwpvtuwhzhv',
+        'PASSWORD': 'bb1b36275e292d9c760f667afea8773cd314c1235010bba6373915a09447ba2d',
+        'PORT': '5432',
     }
 }
 
