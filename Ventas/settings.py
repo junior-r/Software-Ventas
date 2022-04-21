@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-b+v(xs*+ur#lg096^e)e@zomauih$_v(cz2v6zb_7@0orxa!vb
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'software-ventas.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'https://software-ventas.herokuapp.com']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
