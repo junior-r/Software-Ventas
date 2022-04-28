@@ -61,7 +61,7 @@
                             <span class="icon-file-text me-3"></span> Reportes
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="{% url 'facturas' %}">Facturas</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">Something else here</a></li>
@@ -200,12 +200,12 @@
                               <figure class="card-img-top" style="background-image: url({% static 'app/images/reportes.png' %});"></figure>
                               <div class="card-body">
                                     <h5 class="card-title text-center">Reportes</h5>
-                                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    <div class="card-text d-flex gap-3 mt-3">
+                                        <a href="{% url 'facturas' %}" class="go_to btn btn-primary px-5 text-decoration-none">Facturas</a>
+                                    </div>
                               </div>
                               <div class="card-footer d-flex justify-content-center">
-                                  <a href="#">
-                                      <button class="go_to btn btn-primary px-5">Ver</button>
-                                  </a>
+
                               </div>
                         </div>
                     </div>

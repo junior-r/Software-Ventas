@@ -50,11 +50,11 @@
                         <th scope="row">{{ pv.id }}</th>
                         <td>{{ pv.nombre }}</td>
                         <td class="rows-text-1">{{ pv.descripcion }}</td>
-                        <td>$ {{ pv.precio_compra | intcomma }}</td>
-                        <td>$ {{ pv.precio_venta | intcomma }}</td>
-                        <td>$ {{ pv.get_utilities_prd | intcomma }}</td>
+                        <td><span class="icon-coin-dollar text-primary"></span> {{ pv.precio_compra | intcomma }}</td>
+                        <td><span class="icon-coin-dollar text-primary"></span> {{ pv.precio_venta | intcomma }}</td>
+                        <td><span class="icon-coin-dollar text-primary"></span> {{ pv.get_utilities_prd | intcomma }}</td>
                         <td>{{ pv.cantidad | intcomma }}</td>
-                        <td>$ {{ pv.get_utilities_total | intcomma }}</td>
+                        <td><span class="icon-coin-dollar text-primary"></span> {{ pv.get_utilities_total | intcomma }}</td>
                         <td>{{ pv.marca | title }}</td>
                         <td>{{ pv.username }}</td>
                         <td class="product_options">
@@ -149,10 +149,10 @@
                                 <th scope="row" class="number">{{ v.producto_id }}</th>
                                 <td>{{ v.nombre }}</td>
                                 <td class="rows-text-1">{{ v.description }}</td>
-                                <td class="number">$ {{ v.precio_v | intcomma }}</td>
+                                <td class="number"><span class="icon-coin-dollar text-primary"></span> {{ v.precio_v | intcomma }}</td>
                                 <td class="number">{{ v.cantidad_vender }}</td>
                                 <td class="number"></td>
-                                <td class="number">$ {{ v.monto_total }}</td>
+                                <td class="number"><span class="icon-coin-dollar text-primary"></span> {{ v.monto_total }}</td>
                                 <td>{{ v.proveedor | title }}</td>
                                 <td>{{ v.username }}</td>
                                 <td class="product_options">
@@ -192,7 +192,7 @@
                             <td class="number"></td>
                             <td></td>
                             <td class="number">16%</td>
-                            <td class="number">$ {{ total_cart | intcomma }}</td>
+                            <td class="number"><span class="icon-coin-dollar text-primary"></span> {{ total_cart | intcomma }}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -206,7 +206,7 @@
                             <td></td>
                             <td></td>
                             <td class="number">16%</td>
-                            <td class="number">$ {{ total_iva | intcomma }}</td>
+                            <td class="number"><span class="icon-coin-dollar text-primary"></span> {{ total_iva | intcomma }}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -298,13 +298,15 @@
     {% endif %}
 
 
-    {% if request.session.cart.items and clientes and factura %}
+    {% if request.session.cart.items %}
         <!-- Botón para generar la factura -->
-        <a href="{% url 'factura_ventas' factura.n_factura %}">
-            <button type="submit" class="ready_factura btn btn-primary"  data-bs-placement="bottom" title="Terminar Factura">
-                <span class="icon-checkmark"></span>
-            </button>
-        </a>
+        {% if clientes and factura %}
+            <a href="{% url 'factura_ventas' factura.n_factura %}">
+                <button type="submit" class="ready_factura btn btn-primary"  data-bs-placement="bottom" title="Terminar Factura">
+                    <span class="icon-checkmark"></span>
+                </button>
+            </a>
+        {% endif %}
 
         <!-- Botón para limpiar el carrito de compras -->
         <a href="#" onclick="clean_cart()">

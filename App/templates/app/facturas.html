@@ -1,0 +1,80 @@
+{% extends 'app/home.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    <title>Facturas</title>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'app/icons/style.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if facturas %}
+            {% for factura in facturas %}
+
+                <div class="card text-center my-5">
+                    <div class="card-header">
+                        Factura #{{ factura.n_factura }}
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Sofware Ventas - Factura</h2>
+                        <hr>
+                        <div class="content d-flex justify-content-around my-5">
+                            <div class="info_client text-start">
+                                <h3 class="title mb-3">Información del Cliente</h3>
+                                <p class="card-text"><strong>Nombre: </strong>{{ cliente.nombres }} {{ cliente.apellidos }}</p>
+                                <p class="card-text"><strong>Cédula: </strong>{{ cliente.cedula | intcomma }}</p>
+                                <p class="card-text"><strong>Télefono: </strong>{{ cliente.telefono }}</p>
+                                <p class="card-text"><strong>Correo Eletrónico: </strong>{{ cliente.email | intcomma }}</p>
+                            </div>
+                            <div class="info_compra text-start">
+                                <h3 class="title mb-3">Información de la Compra</h3>
+                                <p class="card-text"><strong>ID de producto(s) comprado(s): </strong> <span class="number">{{ factura.productos }}</span></p>
+                                <p class="card-text"><strong>Cantidad de producto(s) comprado(s): </strong> <span class="number">{{ factura.cantidad_prd }}</span></p>
+                                <p class="card-text"><strong>Compra por: </strong><span class="icon-coin-dollar text-primary"></span> <span class="number">{{ factura.pago_total }}</span> <strong>I.V.A. Incluido.</strong></p>
+                            </div>
+                        </div>
+
+                        <a href="#" onclick="delete_factura({{ factura.id }})" class="text-decoration-none">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Borrar {{ factura.n_factura }}">
+                                <span class="icon-bin"></span> Borrar
+                            </button>
+                        </a>
+
+                    </div>
+                    <div class="card-footer text-muted">
+                        {{ factura.fecha | naturaltime }}
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% else %}
+            <h2 class="title">No hay facturas, efectúa una venta y verás la factura aquí.</h2>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_factura(id) {
+            Swal.fire({
+                'title': '¿Estás Seguro?',
+                'text': 'Esta borrando el producto del carrito.',
+                'icon': 'warning',
+                'showCancelButton': true,
+                'cancelButtonText': 'Cancelar',
+                'confirmButtonText': 'Eliminar',
+                'confirmButtonColor': '#dc3545'
+            })
+            .then(function(result) {
+                if(result.isConfirmed) {
+                    window.location.href = '/delete_factura/'+id+'/'
+                }
+            })
+        }
+    </script>
+{% endblock %}

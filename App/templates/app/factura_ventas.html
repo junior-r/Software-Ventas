@@ -75,7 +75,7 @@
         </button>
     </a>
 
-    <a href="#" onclick="delete_factura({{ factura.n_factura }})">
+    <a href="#" onclick="abort_venta({{ factura.n_factura }})">
         <button class="delete_factura btn btn-danger" data-bs-placement="bottom" title="Borrar Factura N° {{ factura.n_factura }}">
             <span class="icon-bin text-white"></span>
         </button>
@@ -85,7 +85,7 @@
 
 {% block js %}
     <script>
-        function delete_factura(n_factura) {
+        function abort_venta(n_factura) {
             Swal.fire({
                 'title': '¿Estás Seguro?',
                 'text': 'Esta acción es irreversible.',
@@ -97,7 +97,7 @@
             })
             .then(function(result) {
                 if(result.isConfirmed) {
-                    window.location.href = '/delete_factura/'+n_factura+'/'
+                    window.location.href = '/delete_venta/'+n_factura+'/'
                 }
             })
         }

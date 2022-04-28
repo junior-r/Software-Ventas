@@ -67,6 +67,8 @@ class Factura(models.Model):
     n_factura = models.IntegerField(unique=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     productos = models.CharField(max_length=200, default=None)
+    cantidad_prd = models.IntegerField()
+    pago_total = models.DecimalField(max_digits=20, decimal_places=2)
     fecha = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

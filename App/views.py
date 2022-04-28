@@ -29,7 +29,8 @@ def home(request):
 
 def signup(request):
     data = {
-        'form': SignUpForm
+        'form': SignUpForm,
+        'date': date
     }
 
     if request.method == 'POST':
@@ -50,6 +51,14 @@ def signup(request):
 def products(request):
     user = User.objects.get(username=request.user)
     productos = Producto.objects.filter(username=user.username)
+
+    for producto in productos:
+        if producto.cantidad <= 0:
+            producto.delete()
+
+            cart = Cart(request)
+            cart.delete(producto)
+
     search = request.GET.get('search')  # Este es el valor del input name='search' en el template.
 
     username = ''
@@ -111,7 +120,15 @@ def add_prd_cart(request, id):
     cart = Cart(request)
     cantidad = request.POST.get('cantidad-v')
     producto = get_object_or_404(Producto, id=id)
-    cart.add(producto, cantidad)
+    try:
+        if int(cantidad) > producto.cantidad:
+            messages.error(request, 'No puede vender una cantidad de productos mayor a la disponible')
+        elif int(cantidad) <= 0:
+            cart.delete(producto)
+        else:
+            cart.add(producto, cantidad)
+    except:
+        cart.add(producto, cantidad=1)
     return redirect(to='ventas')
 
 
@@ -160,7 +177,8 @@ def clean_cart(request):
 def view_product(request, id):
     product = get_object_or_404(Producto, id=id)
     data = {
-        'product': product
+        'product': product,
+        'date': date
     }
     return render(request, 'app/view_product.html', data)
 
@@ -169,7 +187,8 @@ def view_product(request, id):
 def edit_product(request, id):
     producto = get_object_or_404(Producto, id=id)
     data = {
-        'form': AddProductForm(instance=producto)
+        'form': AddProductForm(instance=producto),
+        'date': date
     }
     if request.method == 'POST':
         form = AddProductForm(request.POST, instance=producto)
@@ -267,7 +286,8 @@ def edit_proveedor(request, id):
     proveedor = get_object_or_404(Marca, id=id)
 
     data = {
-        'form': AddMarcaForm(instance=proveedor)
+        'form': AddMarcaForm(instance=proveedor),
+        'date': date
     }
     if request.method == 'POST':
         form = AddMarcaForm(request.POST, instance=proveedor)
@@ -357,7 +377,8 @@ def clients(request):
 def edit_client(request, id):
     client = get_object_or_404(Cliente, id=id)
     data = {
-        'form': AddClientForm(instance=client)
+        'form': AddClientForm(instance=client),
+        'date': date
     }
 
     if request.method == 'POST':
@@ -440,11 +461,21 @@ def get_data_ventas(request):
         n_factura = ''.join(muestra)
 
         lista_productos = []
+
         for c in find_client:
+            cantidad_v = 0
+            total = 0
+            total_iva = 0
+            iva = 0.16
+
             for v in request.session['cart'].values():
                 lista_productos.append(v['producto_id'])
+                cantidad_v += v['cantidad_vender']
 
-            factura = Factura.objects.create(n_factura=int(n_factura), cliente_id=c.id, productos=lista_productos)
+                total += float(v['monto_total'])
+                total_iva = total + (total * iva)
+
+            factura = Factura.objects.create(n_factura=int(n_factura), cliente_id=c.id, productos=lista_productos, cantidad_prd=cantidad_v, pago_total=total_iva)
             factura.save()
             data['factura'] = factura
 
@@ -501,7 +532,31 @@ def factura_ventas(request, n_factura):
 
 
 @login_required
-def delete_factura(request, n_factura):
+def delete_factura(request, id):
+    factura = Factura.objects.get(id=id)
+    factura.delete()
+    messages.success(request, f'Factura #{factura.n_factura} borrada con éxito!')
+    return redirect(to='facturas')
+
+
+@login_required
+def view_facturas(request):
+    facturas = Factura.objects.all().order_by('-id')
+
+    data = {
+        'date': date,
+        'facturas': facturas
+    }
+
+    for factura in facturas:
+        cliente_factura = Cliente.objects.get(id=factura.cliente_id)
+        data['cliente'] = cliente_factura
+
+    return render(request, 'app/facturas.html', data)
+
+
+@login_required
+def abortar_venta(request, n_factura):
     factura = get_object_or_404(Factura, n_factura=n_factura)
     factura.delete()
 

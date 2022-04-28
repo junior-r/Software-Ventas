@@ -161,11 +161,11 @@
                             <th scope="row">{{ p.id }}</th>
                             <td>{{ p.nombre }}</td>
                             <td class="rows-text-1">{{ p.descripcion }}</td>
-                            <td>$ {{ p.precio_compra | intcomma }}</td>
-                            <td>$ {{ p.precio_venta | intcomma }}</td>
-                            <td>$ {{ p.get_utilities_prd | intcomma }}</td>
+                            <td><span class="icon-coin-dollar text-primary"></span> {{ p.precio_compra | intcomma }}</td>
+                            <td><span class="icon-coin-dollar text-primary"></span> {{ p.precio_venta | intcomma }}</td>
+                            <td><span class="icon-coin-dollar text-primary"></span> {{ p.get_utilities_prd | intcomma }}</td>
                             <td>{{ p.cantidad | intcomma }}</td>
-                            <td>$ {{ p.get_utilities_total | intcomma }}</td>
+                            <td><span class="icon-coin-dollar text-primary"></span> {{ p.get_utilities_total | intcomma }}</td>
                             <td>{{ p.marca | title }}</td>
                             <td>{{ p.username }}</td>
                             <td class="product_options">
@@ -216,9 +216,9 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>$ {{ ganancias | intcomma }}</td>
+                        <td><span class="icon-coin-dollar text-primary"></span> {{ ganancias | intcomma }}</td>
                         <td>{{ totalproductos | intcomma }}</td>
-                        <td>$ {{ ganancia_total | intcomma }}</td>
+                        <td><span class="icon-coin-dollar text-primary"></span> {{ ganancia_total | intcomma }}</td>
                         <td></td>
                         <td></td>
                         <td></td>

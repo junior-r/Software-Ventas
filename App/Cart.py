@@ -15,6 +15,7 @@ class Cart:
 
     def add(self, producto, cantidad):
         id = str(producto.id)
+
         if id not in self.cart.keys():
             self.cart[id] = {
                 'producto_id': producto.id,
