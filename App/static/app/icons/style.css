@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?eu3sn1');
-  src:  url('fonts/icomoon.eot?eu3sn1#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?eu3sn1') format('truetype'),
-    url('fonts/icomoon.woff?eu3sn1') format('woff'),
-    url('fonts/icomoon.svg?eu3sn1#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?bnohjh');
+  src:  url('fonts/icomoon.eot?bnohjh#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?bnohjh') format('truetype'),
+    url('fonts/icomoon.woff?bnohjh') format('woff'),
+    url('fonts/icomoon.svg?bnohjh#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-heart-o:before {
+  content: "\e90d";
+}
+.icon-bell:before {
+  content: "\e90a";
+}
+.icon-hash:before {
+  content: "\e909";
+}
 .icon-x:before {
   content: "\e908";
 }
@@ -40,6 +49,9 @@
 .icon-cart:before {
   content: "\e93a";
 }
+.icon-coin-dollar:before {
+  content: "\e93b";
+}
 .icon-phone:before {
   content: "\e942";
 }
@@ -48,6 +60,9 @@
 }
 .icon-drawer2:before {
   content: "\e95d";
+}
+.icon-bubble:before {
+  content: "\e96b";
 }
 .icon-users:before {
   content: "\e972";
@@ -64,6 +79,9 @@
 .icon-eye:before {
   content: "\e9ce";
 }
+.icon-bookmark:before {
+  content: "\e9d2";
+}
 .icon-plus:before {
   content: "\ea0a";
 }
@@ -73,29 +91,23 @@
 .icon-checkmark:before {
   content: "\ea10";
 }
+.icon-loop:before {
+  content: "\ea2d";
+}
 .icon-arrow-down2:before {
   content: "\ea3e";
 }
 .icon-arrow-left2:before {
   content: "\ea40";
 }
+.icon-more-horizontal:before {
+  content: "\e90c";
+}
+.icon-mail:before {
+  content: "\e90b";
+}
 .icon-copyright:before {
   content: "\e905";
-}
-.icon-tiktok:before {
-  content: "\e900";
-}
-.icon-instagram:before {
-  content: "\e901";
-  color: #e4405f;
-}
-.icon-facebook:before {
-  content: "\e902";
-  color: #1877f2;
-}
-.icon-whatsapp:before {
-  content: "\e903";
-  color: #25d366;
 }
 .icon-gmail:before {
   content: "\e904";

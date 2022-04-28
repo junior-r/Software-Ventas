@@ -157,21 +157,21 @@
                                 <td>{{ v.username }}</td>
                                 <td class="product_options">
 
-                                    <a href="{% url 'add_cart' v.producto_id %}" class="text-decoration-none">
-                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar para vender">
+                                    <a href="#" class="text-decoration-none">
+                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#exampleModal{{ v.producto_id }}" data-bs-placement="bottom" title="Editar cantidad a vender">
                                             <span class="icon-plus"></span>
-                                        </button>
-                                    </a>
-
-                                    <a href="{% url 'sub_cart' v.producto_id %}" class="text-decoration-none">
-                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Guardar para vender">
-                                            <span class="icon-minus"></span>
                                         </button>
                                     </a>
 
                                     <a href="{% url 'view_producto' v.producto_id %}" class="text-decoration-none">
                                         <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#viewProduct" data-bs-placement="bottom" title="Ver Producto">
                                             <span class="icon-eye"></span>
+                                        </button>
+                                    </a>
+
+                                    <a href="#" class="text-decoration-none">
+                                        <button type="button" class="btn p-0 text-info" data-bs-toggle="modal" data-bs-target="#precioVentaModal{{ v.producto_id }}" data-bs-placement="bottom" title="Guardar para vender">
+                                            <span class="icon-coin-dollar"></span>
                                         </button>
                                     </a>
 
@@ -254,6 +254,49 @@
             </div>
         </div>
     {% endif %}
+
+    {% if request.session.cart.items %}
+        {% for v in request.session.cart.values %}
+            <!-- Modal editar la cantidad a vender -->
+            <div class="modal fade" id="exampleModal{{ v.producto_id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ v.producto_id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edite la cantidad a vender</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'add_cart' v.producto_id %}" method="post">
+                                {% csrf_token %}
+                                <input type="number" value="{{ v.cantidad_vender }}" class="form-control mb-3" name="cantidad-v">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="precioVentaModal{{ v.producto_id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ v.producto_id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edite el precio de venta</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <small class="text mx-3"><strong class="text-dark title">Nota: </strong>Use <strong>.</strong> en lugar de <strong>,</strong> para números decimales</small>
+                            <form action="{% url 'update_pv' v.producto_id %}" method="post">
+                                {% csrf_token %}
+                                <input type="" value="{{ v.precio_v | intcomma }}" class="form-control mb-3" name="precio-v">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
 
     {% if request.session.cart.items and clientes and factura %}
         <!-- Botón para generar la factura -->

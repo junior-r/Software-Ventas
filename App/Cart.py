@@ -13,10 +13,9 @@ class Cart:
         self.session['cart'] = self.cart
         self.session.modified = True
 
-    def add(self, producto):
+    def add(self, producto, cantidad):
         id = str(producto.id)
         if id not in self.cart.keys():
-            print('NO aumentó la cantidad')
             self.cart[id] = {
                 'producto_id': producto.id,
                 'nombre': producto.nombre,
@@ -28,9 +27,8 @@ class Cart:
                 'cantidad_vender': 1
             }
         else:
-            print('aumentó la cantidad')
-            self.cart[id]['cantidad_vender'] += int(1)
-            self.cart[id]['monto_total'] += float(producto.precio_venta)
+            self.cart[id]['cantidad_vender'] = int(cantidad)
+            self.cart[id]['monto_total'] = float(self.cart[id]['precio_v']) * self.cart[id]['cantidad_vender']
         self.save()
 
     def delete(self, producto):
@@ -46,6 +44,13 @@ class Cart:
             self.cart[id]['monto_total'] -= float(producto.precio_venta)
             if self.cart[id]['cantidad_vender'] <= 0:
                 self.delete(producto)
+        self.save()
+
+    def update_pv(self, producto, pv):
+        id = str(producto.id)
+        if id in self.cart.keys():
+            self.cart[id]['precio_v'] = float(pv)
+            self.cart[id]['monto_total'] = float(pv) * self.cart[id]['cantidad_vender']
         self.save()
 
     def clean(self):

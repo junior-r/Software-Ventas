@@ -109,8 +109,9 @@ def products(request):
 def add_prd_cart(request, id):
     # Por cada click incrementa la cantidad de productos a vender.
     cart = Cart(request)
+    cantidad = request.POST.get('cantidad-v')
     producto = get_object_or_404(Producto, id=id)
-    cart.add(producto)
+    cart.add(producto, cantidad)
     return redirect(to='ventas')
 
 
@@ -128,6 +129,18 @@ def sub_prd_cart(request, id):
     cart = Cart(request)
     producto = get_object_or_404(Producto, id=id)
     cart.sub(producto)
+    return redirect(to='ventas')
+
+
+@login_required
+def update_pv(request, id):
+    cart = Cart(request)
+    try:
+        pv = float(request.POST.get('precio-v'))
+        producto = get_object_or_404(Producto, id=id)
+        cart.update_pv(producto, pv)
+    except ValueError:
+        messages.error(request, 'Use . en lugar de ,')
     return redirect(to='ventas')
 
 
@@ -374,6 +387,7 @@ def ventas(request):
     return render(request, 'app/ventas.html', data)
 
 
+@login_required
 def get_data_ventas(request):
     search = request.GET.get('search')
 
@@ -413,7 +427,6 @@ def get_data_ventas(request):
     data['clientes'] = clientes
     factura = ''
     data['factura'] = factura
-
 
     if request.method == 'POST':
         selected_client = request.POST.get('selected_client')
